@@ -1,0 +1,47 @@
+{
+  "name": "@qualweb/css-techniques",
+  "version": "0.0.1",
+  "description": "Implementation of the WCAG 2.1 CSS techniques",
+  "main": "dist/index.js",
+  "scripts": {
+    "tsc": "tsc",
+    "test": "mocha test/**/*",
+    "test-t1": "mocha test/techniques/QW-CSS-T1.spec.js",
+    "clean": "node clean.js",
+    "build": "npm run clean && tsc --build",
+    "pub": "npm run build && npm publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qualweb/css-techniques.git"
+  },
+  "keywords": [
+    "a11y",
+    "wcag",
+    "css",
+    "techniques",
+    "qualweb",
+    "evaluation"
+  ],
+  "author": "João Afonso Vicente",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/qualweb/css-techniques/issues"
+  },
+  "homepage": "https://github.com/qualweb/css-techniques#readme",
+  "devDependencies": {
+    "@qualweb/types": "0.0.32",
+    "@types/htmlparser2": "^3.10.1",
+    "@types/lodash": "^4.14.138",
+    "@types/node": "^12.7.2",
+    "chai": "^4.2.0",
+    "mocha": "^6.2.0",
+    "tslint": "^5.19.0",
+    "typescript": "^3.6.2"
+  },
+  "dependencies": {
+    "htmlparser-to-html": "0.0.6",
+    "lodash": "^4.17.15",
+    "stew-select": "0.0.5"
+  }
+}
