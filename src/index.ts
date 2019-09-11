@@ -9,19 +9,11 @@ const stew = new(require('stew-select')).Stew();
 
 import mapping from './techniques/mapping.json';
 
-import * as QW_CSS_T1 from './techniques/QW-CSS-T1';
-
-const techniques = {
-  'QW-CSS-T1': QW_CSS_T1
-};
-
-const techniques_to_execute = {
-  'QW-CSS-T1': true
-};
+import { techniques, techniquesToExecute } from './techniques';
 
 function configure(options: CSSTOptions): void {
   if (options.principles) {
-    options.principles = options.principles.map(p => (p.charAt(0).toUpperCase() + p.slice(1)).trim());
+    options.principles = options.principles.map(p => (p.charAt(0).toUpperCase() + p.toLowerCase().slice(1)).trim());
   }
   if (options.levels) {
     options.levels = options.levels.map(l => l.toUpperCase().trim());
@@ -31,31 +23,31 @@ function configure(options: CSSTOptions): void {
   }
 
   for (const technique of Object.keys(techniques) || []) {
-    techniques_to_execute[technique] = true;
+    techniquesToExecute[technique] = true;
     
     if (options.principles && options.principles.length !== 0) {
       if (options.levels && options.levels.length !== 0) {
         if (!techniques[technique].hasPrincipleAndLevels(options.principles, options.levels)) {
-          techniques_to_execute[technique] = false;
+          techniquesToExecute[technique] = false;
         }
       } else if (!techniques[technique].hasPrincipleAndLevels(options.principles, ['A', 'AA', 'AAA'])) {
-        techniques_to_execute[technique] = false;
+        techniquesToExecute[technique] = false;
       }
     } else if (options.levels && options.levels.length !== 0) {
       if (!techniques[technique].hasPrincipleAndLevels(['Perceivable', 'Operable', 'Understandable', 'Robust'], options.levels)) {
-        techniques_to_execute[technique] = false;
+        techniquesToExecute[technique] = false;
       }
     }
     if (!options.principles && !options.levels) {
       if (options.techniques && options.techniques.length !== 0) {
         if (!options.techniques.includes(technique) && !options.techniques.includes(technique[technique].getTechniqueMapping())) {
-          techniques_to_execute[technique] = false;
+          techniquesToExecute[technique] = false;
         }
       }
     } else {
       if (options.techniques && options.techniques.length !== 0) {
         if (options.techniques.includes(technique) || options.techniques.includes(technique[technique].getTechniqueMapping())) {
-          techniques_to_execute[technique] = true;
+          techniquesToExecute[technique] = true;
         }
       }
     }
@@ -79,7 +71,7 @@ async function executeCSST(processedHTML: DomElement[]): Promise<CSSTechniquesRe
   
   for (const selector of selectors || []) {
     for (const technique of mapping[selector] || []) {
-      if (techniques_to_execute[technique]) {        
+      if (techniquesToExecute[technique]) {        
         let elements = stew.select(processedHTML, selector);
         if (elements.length > 0) {
           for (const elem of elements || []) {
