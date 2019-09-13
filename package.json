@@ -30,7 +30,8 @@
   },
   "homepage": "https://github.com/qualweb/css-techniques#readme",
   "devDependencies": {
-    "@qualweb/types": "0.0.32",
+    "@qualweb/get-dom-puppeteer": "^0.0.3",
+    "@qualweb/types": "^~0.0.10",
     "@types/htmlparser2": "^3.10.1",
     "@types/lodash": "^4.14.138",
     "@types/node": "^12.7.2",

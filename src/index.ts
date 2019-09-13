@@ -3,11 +3,12 @@
  */
 'use strict';
 
-import { DomElement } from 'htmlparser2';
-import { CSSTOptions, CSSTechniquesReport } from '@qualweb/css-techniques';
-const stew = new(require('stew-select')).Stew();
 
-import mapping from './techniques/mapping.json';
+import { CSSTOptions, CSSTechniquesReport } from '@qualweb/css-techniques';
+import {CSSStylesheet} from '@qualweb/get-dom-puppeteer';
+// const stew = new(require('stew-select')).Stew();
+
+// import mapping from './techniques/mapping.json';
 
 import { techniques, techniquesToExecute } from './techniques';
 
@@ -24,7 +25,7 @@ function configure(options: CSSTOptions): void {
 
   for (const technique of Object.keys(techniques) || []) {
     techniquesToExecute[technique] = true;
-    
+
     if (options.principles && options.principles.length !== 0) {
       if (options.levels && options.levels.length !== 0) {
         if (!techniques[technique].hasPrincipleAndLevels(options.principles, options.levels)) {
@@ -54,7 +55,7 @@ function configure(options: CSSTOptions): void {
   }
 }
 
-async function executeCSST(processedHTML: DomElement[]): Promise<CSSTechniquesReport> {
+async function executeCSST(styleSheets: CSSStylesheet[]): Promise<CSSTechniquesReport> {
   
   const report: CSSTechniquesReport = {
     type: 'css-techniques',
@@ -67,26 +68,29 @@ async function executeCSST(processedHTML: DomElement[]): Promise<CSSTechniquesRe
     techniques: {}
   };
 
-  const selectors = Object.keys(mapping);
+  // const selectors = Object.keys(mapping);
   
-  for (const selector of selectors || []) {
-    for (const technique of mapping[selector] || []) {
-      if (techniquesToExecute[technique]) {        
-        let elements = stew.select(processedHTML, selector);
-        if (elements.length > 0) {
-          for (const elem of elements || []) {
-            await techniques[technique].execute(elem, processedHTML);
-          }
-        } else {
-          await techniques[technique].execute(undefined, processedHTML);
-        }
-        report.techniques[technique] = techniques[technique].getFinalResults();
-        report.metadata[report.techniques[technique].metadata.outcome]++;
-        techniques[technique].reset();
-      }
-    }
-  }
+  // for (const selector of selectors || []) {
+  //   for (const technique of mapping[selector] || []) {
+  //     if (techniquesToExecute[technique]) {        
+  //       let elements = stew.select(processedHTML, selector);
+  //       if (elements.length > 0) {
+  //         for (const elem of elements || []) {
+  //           await techniques[technique].execute(elem, processedHTML);
+  //         }
+  //       } else {
+  //         await techniques[technique].execute(undefined, processedHTML);
+  //       }
+  //       report.techniques[technique] = techniques[technique].getFinalResults();
+  //       report.metadata[report.techniques[technique].metadata.outcome]++;
+  //       techniques[technique].reset();
+  //     }
+  //   }
+  // }
 
+  await techniques["QW-CSS-T1"].execute(styleSheets);
+  report.techniques["QW-CSS-T1"] = techniques["QW-CSS-T1"].getFinalResults();
+  report.metadata[report.techniques["QW-CSS-T1"].metadata.outcome]++;
   return report;
 }
 

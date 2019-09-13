@@ -1,19 +1,11 @@
 'use strict';
 
 import _ from 'lodash';
-import {
-  DomElement
-} from 'htmlparser2';
 
-import {
-  CSSTechnique,
-  CSSTechniqueResult
-} from '@qualweb/css-techniques';
+import {CSSTechnique, CSSTechniqueResult} from '@qualweb/css-techniques';
+import {CSSStylesheet} from '@qualweb/get-dom-puppeteer';
 
-import {
-  getElementSelector,
-  transform_element_into_html
-} from '../util';
+const css = require('css');
 
 const technique: CSSTechnique = {
   name: 'Using "percent, em, names" for font sizes',
@@ -26,11 +18,11 @@ const technique: CSSTechnique = {
       attributes: 'font-size'
     },
     'success-criteria': [{
-        name: '1.4.4',
-        level: 'AA',
-        principle: 'Perceivable',
-        url: 'https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-scale.html'
-      },
+      name: '1.4.4',
+      level: 'AA',
+      principle: 'Perceivable',
+      url: 'https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-scale.html'
+    },
       {
         name: '1.4.5',
         level: 'AA',
@@ -80,70 +72,15 @@ function hasPrincipleAndLevels(principles: string[], levels: string[]): boolean 
   return has;
 }
 
-async function execute(element: DomElement | undefined, processedHTML: DomElement[]): Promise<void> {
+async function execute(styleSheets: CSSStylesheet[]): Promise<void> {
 
-  if (!element) {
-    return;
-  }
-
-  const evaluation: CSSTechniqueResult = {
-    verdict: '',
-    description: ''
-  };
-
-  if (element.attribs && element.attribs['computed-style']) {
-    const cStyle = element.attribs['computed-style'];
-    const styles = cStyle.split(';');
-
-    const names = ['xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large', 'xsmaller', 'larger'];
-
-    let styleFound = false;
-
-    for (const style of styles || []) {
-      if (style.trim().startsWith('font-size')) {
-        styleFound = true;
-        const fontSize = style.trim().split(':');
-        const value = fontSize[1].trim();
-
-        if (names.includes(value)) {
-          evaluation.verdict = 'passed';
-          evaluation.description = `Element "font-size" style attribute doesn't use "px"`;
-          technique.metadata.passed++;
-        } else if (value.endsWith('%')) {
-          evaluation.verdict = 'passed';
-          evaluation.description = `Element "font-size" style attribute doesn't use "px"`;
-          technique.metadata.passed++;
-        } else if (value.endsWith('em')) {
-          evaluation.verdict = 'passed';
-          evaluation.description = `Element "font-size" style attribute doesn't use "px"`;
-          technique.metadata.passed++;
-        } else {
-          evaluation.verdict = 'failed';
-          evaluation.description = `Element "font-size" style attribute uses "px"`;
-          technique.metadata.failed++;
-        }
-
-        evaluation.attributes = style.trim();
+  for (const styleSheet of styleSheets) {
+    if(styleSheet.content && styleSheet.content.plain){
+      if (styleSheet.content.plain.includes("font-size")){
+        analyseAST(styleSheet.content.parsed, styleSheet.file);
       }
     }
-
-    if (!styleFound) {
-      evaluation.verdict = 'inapplicable';
-      evaluation.description = `Element doesn't have the style "font-size"`;
-      technique.metadata.inapplicable++;
-    }
-  } else {
-    evaluation.verdict = 'inapplicable';
-    evaluation.description = `Element doesn't have styles`;
-    technique.metadata.inapplicable++;
   }
-
-  if (element) {
-    evaluation.code = transform_element_into_html(element);
-    evaluation.pointer = getElementSelector(element);
-  }
-
-  technique.results.push(_.clone(evaluation));
 }
 
 function getFinalResults() {
@@ -191,3 +128,80 @@ export {
   getFinalResults,
   reset
 };
+
+
+function analyseAST(cssObject: any, fileName: string): void {
+  if (cssObject === undefined ||
+    cssObject['type'] === 'comment' ||
+    cssObject['type'] === 'keyframes' ||
+    cssObject['type'] === 'import'){ // ignore
+    return;
+  }
+  if (cssObject['type'] === 'rule' || cssObject['type'] === 'font-face' || cssObject['type'] === 'page') {
+    loopDeclarations(cssObject, fileName)
+  } else {
+    if (cssObject['type'] === 'stylesheet') {
+      for (const key of cssObject['stylesheet']['rules']) {
+        analyseAST(key, fileName);
+      }
+    } else {
+      for (const key of cssObject['rules']) {
+        analyseAST(key, fileName);
+      }
+    }
+  }
+}
+
+function loopDeclarations(cssObject: any, fileName: string): void {
+
+  let declarations = cssObject['declarations'];
+  if(declarations){
+    for (const declaration of declarations) {
+      if (declaration['property'] && declaration['value'] ) {
+        if (declaration['property'] === 'font-size'){
+          extractInfo(cssObject, declaration, fileName);
+        }
+      }
+    }
+  }
+}
+
+function extractInfo(cssObject: any, declaration: any, fileName: string): void {
+  const names = ['xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large', 'xsmaller', 'larger'];
+
+  if(declaration['value'].includes('px')){
+    fillEvaluation('warning', `Element "font-size" style attribute uses "px"`,
+      css.stringify({ type: 'stylesheet', stylesheet:{source: undefined, rules: [cssObject]}}),
+      fileName, cssObject['selectors'].toString(), cssObject['position'],
+      declaration['property'], declaration['value'], declaration['position'])
+
+  }else if(declaration['value'].endsWith('em') || declaration['value'].endsWith('%') || names.includes(declaration['value'].trim())){
+    fillEvaluation('passed', `Element "font-size" style attribute doesn\'t use "px"`,
+      css.stringify({ type: 'stylesheet', stylesheet:{source: undefined, rules: [cssObject]}}),
+      fileName, cssObject['selectors'].toString(), cssObject['position'],
+      declaration['property'], declaration['value'], declaration['position']);
+  }else{
+    fillEvaluation('inapplicable', `Element has "font-size" style with unknown metric`)
+  }
+}
+
+function fillEvaluation(verdict: "" | "passed" | "failed" | "warning" | "inapplicable", description: string,
+                        cssCode?: string, stylesheetFile?: string,
+                        selectorValue?: string, selectorPosition?: Position,
+                        propertyName?: string, propertyValue?: string, propertyPosition?: Position) {
+
+  const evaluation: CSSTechniqueResult = {
+    verdict: verdict,
+    description: description
+  };
+
+  if (verdict !== 'inapplicable' && selectorValue && propertyName && propertyValue){
+    evaluation.cssCode = cssCode;
+    evaluation.stylesheetFile = stylesheetFile;
+    evaluation.selector = {value: selectorValue, position: selectorPosition};
+    evaluation.property = {name: propertyName, value: propertyValue, "position": propertyPosition};
+  }
+
+  technique.metadata[verdict]++;
+  technique.results.push(_.clone(evaluation));
+}
