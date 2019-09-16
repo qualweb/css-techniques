@@ -4,8 +4,7 @@ import _ from 'lodash';
 
 import {CSSTechnique, CSSTechniqueResult} from '@qualweb/css-techniques';
 import {CSSStylesheet} from '@qualweb/get-dom-puppeteer';
-
-const css = require('css');
+import css from 'css';
 
 const technique: CSSTechnique = {
   name: 'Using "percent, em, names" for font sizes',
@@ -171,24 +170,24 @@ function extractInfo(cssObject: any, declaration: any, fileName: string): void {
 
   if(declaration['value'].includes('px')){
     fillEvaluation('warning', `Element "font-size" style attribute uses "px"`,
-      css.stringify({ type: 'stylesheet', stylesheet:{source: undefined, rules: [cssObject]}}),
+      css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
       fileName, cssObject['selectors'].toString(), cssObject['position'],
       declaration['property'], declaration['value'], declaration['position'])
 
-  }else if(declaration['value'].endsWith('em') || declaration['value'].endsWith('%') || names.includes(declaration['value'].trim())){
+  } else if(declaration['value'].endsWith('em') || declaration['value'].endsWith('%') || names.includes(declaration['value'].trim())){
     fillEvaluation('passed', `Element "font-size" style attribute doesn\'t use "px"`,
-      css.stringify({ type: 'stylesheet', stylesheet:{source: undefined, rules: [cssObject]}}),
+      css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
       fileName, cssObject['selectors'].toString(), cssObject['position'],
       declaration['property'], declaration['value'], declaration['position']);
-  }else{
+  } else {
     fillEvaluation('inapplicable', `Element has "font-size" style with unknown metric`)
   }
 }
 
 function fillEvaluation(verdict: "" | "passed" | "failed" | "warning" | "inapplicable", description: string,
                         cssCode?: string, stylesheetFile?: string,
-                        selectorValue?: string, selectorPosition?: Position,
-                        propertyName?: string, propertyValue?: string, propertyPosition?: Position) {
+                        selectorValue?: string, selectorPosition?: css.Position,
+                        propertyName?: string, propertyValue?: string, propertyPosition?: css.Position) {
 
   const evaluation: CSSTechniqueResult = {
     verdict: verdict,
@@ -199,7 +198,7 @@ function fillEvaluation(verdict: "" | "passed" | "failed" | "warning" | "inappli
     evaluation.cssCode = cssCode;
     evaluation.stylesheetFile = stylesheetFile;
     evaluation.selector = {value: selectorValue, position: selectorPosition};
-    evaluation.property = {name: propertyName, value: propertyValue, "position": propertyPosition};
+    evaluation.property = {name: propertyName, value: propertyValue, position: propertyPosition};
   }
 
   technique.metadata[verdict]++;
