@@ -88,9 +88,9 @@ async function executeCSST(styleSheets: CSSStylesheet[]): Promise<CSSTechniquesR
   //   }
   // }
 
-  await techniques["QW-CSS-T1"].execute(styleSheets);
-  report.techniques["QW-CSS-T1"] = techniques["QW-CSS-T1"].getFinalResults();
-  report.metadata[report.techniques["QW-CSS-T1"].metadata.outcome]++;
+  await techniques["QW-CSS-T3"].execute(styleSheets);
+  report.techniques["QW-CSS-T3"] = techniques["QW-CSS-T3"].getFinalResults();
+  report.metadata[report.techniques["QW-CSS-T3"].metadata.outcome]++;
   return report;
 }
 

@@ -1,11 +1,11 @@
-import * as QW_CSS_T1 from './techniques/QW-CSS-T1';
+import * as QW_CSS_T3 from './techniques/QW-CSS-T3';
 
 const techniques = {
-  'QW-CSS-T1': QW_CSS_T1
+  'QW-CSS-T3': QW_CSS_T3
 };
 
 const techniquesToExecute = {
-  'QW-CSS-T1': true
+  'QW-CSS-T3': true
 };
 
 export {
