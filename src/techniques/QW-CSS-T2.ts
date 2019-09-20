@@ -13,7 +13,7 @@ const technique: CSSTechnique = {
   description: 'This technique describes how to align blocks of text either left or right by setting the CSS text-align property.',
   metadata: {
     target: {
-      element: 'p',
+      element: '*',
       attributes: 'text-align'
     },
     'success-criteria': [
@@ -117,9 +117,7 @@ function analyseAST(cssObject: any, fileName: string): void {
   }
   if (cssObject['type'] === 'rule' || cssObject['type'] === 'font-face' || cssObject['type'] === 'page') {
     
-    if(cssObject['selectors'] && cssObject['selectors'].includes('p') ||
-    cssObject['selectors'] && cssObject['selectors'].includes('>p')||
-    cssObject['selectors'] && cssObject['selectors'].includes('> p'))
+    if(cssObject['selectors'])
       loopDeclarations(cssObject, fileName)
   } else {
     if (cssObject['type'] === 'stylesheet') {
