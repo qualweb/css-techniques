@@ -116,7 +116,8 @@ function analyseAST(cssObject: any, fileName: string): void {
     return;
   }
   if (cssObject['type'] === 'rule' || cssObject['type'] === 'font-face' || cssObject['type'] === 'page') {
-      loopDeclarations(cssObject, fileName)
+      if(cssObject['selectors'])
+        loopDeclarations(cssObject, fileName)
   } else {
     if (cssObject['type'] === 'stylesheet') {
       for (const key of cssObject['stylesheet']['rules']) {

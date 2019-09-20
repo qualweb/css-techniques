@@ -1,7 +1,7 @@
 const {
   configure,
   executeCSST
-} = require('../dist/index');
+} = require('../../dist/index');
 const { expect } = require('chai');
 const { getDom } = require('@qualweb/get-dom-puppeteer')
 
