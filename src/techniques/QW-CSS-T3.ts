@@ -21,7 +21,7 @@ const technique: CSSTechnique = {
         name: '1.4.8',
         level: 'AAA',
         principle: 'Perceivable',
-        url: 'https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-visual-presentation.html'
+        url: 'https://www.w3.org/WAI/WCAG21/Understanding/visual-presentation.html'
       }
     ],
     related: [],
@@ -54,7 +54,7 @@ async function execute(styleSheets: CSSStylesheet[]): Promise<void> {
 
   for (const styleSheet of styleSheets) {
     if(styleSheet.content && styleSheet.content.plain){
-      if (styleSheet.content.plain.includes("font-size")){
+      if (styleSheet.content.plain.includes("line-height")){
         analyseAST(styleSheet.content.parsed, styleSheet.file);
       }
     }
