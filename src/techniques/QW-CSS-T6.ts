@@ -20,12 +20,12 @@ const technique: CSSTechnique = {
       name: '2.2.2',
       level: 'A',
       principle: 'Operable',
-      url: 'https://www.w3.org/TR/2016/NOTE-UNDERSTANDING-WCAG20-20161007/time-limits-pause.html'
+      url: 'https://www.w3.org/WAI/WCAG21/Understanding/pause-stop-hide.html'
     }
     ],
     related: ['SCR22'],
     url: {
-      'SCR22': 'https://www.w3.org/TR/WCAG20-TECHS/SCR22.html'
+      'SCR22': 'https://www.w3.org/WAI/WCAG21/Techniques/client-side-script/SCR22'
     },
     passed: 0,
     warning: 0,
@@ -55,7 +55,7 @@ async function execute(styleSheets: CSSStylesheet[]): Promise<void> {
 
   for (const styleSheet of styleSheets) {
     if(styleSheet.content && styleSheet.content.plain){
-      if (styleSheet.content.plain.includes("font-size")){
+      if (styleSheet.content.plain.includes("text-decoration")){
         analyseAST(styleSheet.content.parsed, styleSheet.file);
       }
     }
