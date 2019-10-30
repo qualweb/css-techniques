@@ -21,32 +21,32 @@ const technique: CSSTechnique = {
       name: '1.4.4',
       level: 'AA',
       principle: 'Perceivable',
-      url: 'https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-scale.html'
+      url: 'https://www.w3.org/WAI/WCAG21/Understanding/resize-text'
     },
       {
         name: '1.4.5',
         level: 'AA',
         principle: 'Perceivable',
-        url: 'https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-text-presentation.html'
+        url: 'https://www.w3.org/WAI/WCAG21/Understanding/images-of-text'
       },
       {
         name: '1.4.8',
         level: 'AAA',
         principle: 'Perceivable',
-        url: 'https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-visual-presentation.html'
+        url: 'https://www.w3.org/WAI/WCAG21/Understanding/visual-presentation'
       },
       {
-        name: '1.4.9	',
+        name: '1.4.9',
         level: 'AAA',
         principle: 'Perceivable',
-        url: 'https://www.w3.org/WAI/GL/UNDERSTANDING-WCAG20/visual-audio-contrast-text-images.html'
+        url: 'https://www.w3.org/WAI/WCAG21/Understanding/images-of-text-no-exception'
       }
     ],
     related: ['C12', 'C13', 'C14'],
     url: {
-      'C12': 'https://www.w3.org/TR/WCAG20-TECHS/C12.html',
-      'C13': 'https://www.w3.org/TR/WCAG20-TECHS/C13.html',
-      'C14': 'https://www.w3.org/TR/WCAG20-TECHS/C14.html'
+      'C12': 'https://www.w3.org/WAI/WCAG21/Techniques/css/C12',
+      'C13': 'https://www.w3.org/WAI/WCAG21/Techniques/css/C13',
+      'C14': 'https://www.w3.org/WAI/WCAG21/Techniques/css/C14'
     },
     passed: 0,
     warning: 0,
@@ -75,8 +75,8 @@ function hasPrincipleAndLevels(principles: string[], levels: string[]): boolean 
 async function execute(styleSheets: CSSStylesheet[]): Promise<void> {
 
   for (const styleSheet of styleSheets) {
-    if(styleSheet.content && styleSheet.content.plain){
-      if (styleSheet.content.plain.includes("font-size")){
+    if (styleSheet.content && styleSheet.content.plain) {
+      if (styleSheet.content.plain.includes("font-size")) {
         analyseAST(styleSheet.content.parsed, styleSheet.file);
       }
     }
@@ -93,7 +93,7 @@ function reset(): void {
   technique.metadata.warning = 0;
   technique.metadata.failed = 0;
   technique.metadata.inapplicable = 0;
-  technique.results = new Array < CSSTechniqueResult > ();
+  technique.results = new Array<CSSTechniqueResult>();
 }
 
 function outcomeTechnique(): void {
@@ -134,7 +134,7 @@ function analyseAST(cssObject: any, fileName: string): void {
   if (cssObject === undefined ||
     cssObject['type'] === 'comment' ||
     cssObject['type'] === 'keyframes' ||
-    cssObject['type'] === 'import'){ // ignore
+    cssObject['type'] === 'import') { // ignore
     return;
   }
   if (cssObject['type'] === 'rule' || cssObject['type'] === 'font-face' || cssObject['type'] === 'page') {
@@ -155,10 +155,10 @@ function analyseAST(cssObject: any, fileName: string): void {
 function loopDeclarations(cssObject: any, fileName: string): void {
 
   let declarations = cssObject['declarations'];
-  if(declarations){
+  if (declarations) {
     for (const declaration of declarations) {
-      if (declaration['property'] && declaration['value'] ) {
-        if (declaration['property'] === 'font-size'){
+      if (declaration['property'] && declaration['value']) {
+        if (declaration['property'] === 'font-size') {
           extractInfo(cssObject, declaration, fileName);
         }
       }
@@ -169,19 +169,26 @@ function loopDeclarations(cssObject: any, fileName: string): void {
 function extractInfo(cssObject: any, declaration: any, fileName: string): void {
   const names = ['xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large', 'xsmaller', 'larger'];
 
-  if(declaration['value'].includes('px')){
+  if (declaration['value'].includes('px')) {
     fillEvaluation('warning', `Element "font-size" style attribute uses "px"`,
-      css.stringify({ type: 'stylesheet', stylesheet:{source: undefined, rules: [cssObject]}}),
+      css.stringify({type: 'stylesheet', stylesheet: {source: undefined, rules: [cssObject]}}),
       fileName, cssObject['selectors'].toString(), cssObject['position'],
       declaration['property'], declaration['value'], declaration['position'])
 
-  }else if(declaration['value'].endsWith('em') || declaration['value'].endsWith('%') || names.includes(declaration['value'].trim())){
+  } else if (declaration['value'].endsWith('em') || declaration['value'].endsWith('%') || names.includes(declaration['value'].trim()) ) {
+    //todo acrescentamos tambem o !important? || declaration['value'].endsWith('em!important') || declaration['value'].endsWith('%!important')
     fillEvaluation('passed', `Element "font-size" style attribute doesn\'t use "px"`,
-      css.stringify({ type: 'stylesheet', stylesheet:{source: undefined, rules: [cssObject]}}),
+      css.stringify({type: 'stylesheet', stylesheet: {source: undefined, rules: [cssObject]}}),
       fileName, cssObject['selectors'].toString(), cssObject['position'],
       declaration['property'], declaration['value'], declaration['position']);
-  }else{
-    fillEvaluation('inapplicable', `Element has "font-size" style with unknown metric`)
+
+  } else {
+    //todo inherit eh uma unknown metric... eh suposto?
+    //todo damos failed ou inapplicable?
+    fillEvaluation('inapplicable', `Element has "font-size" style with unknown metric`,
+      css.stringify({type: 'stylesheet', stylesheet: {source: undefined, rules: [cssObject]}}),
+      fileName, cssObject['selectors'].toString(), cssObject['position'],
+      declaration['property'], declaration['value'], declaration['position']);
   }
 }
 
@@ -195,7 +202,7 @@ function fillEvaluation(verdict: "" | "passed" | "failed" | "warning" | "inappli
     description: description
   };
 
-  if (verdict !== 'inapplicable' && selectorValue && propertyName && propertyValue){
+  if (verdict !== 'inapplicable' && selectorValue && propertyName && propertyValue) {
     evaluation.cssCode = cssCode;
     evaluation.stylesheetFile = stylesheetFile;
     evaluation.selector = {value: selectorValue, position: selectorPosition};
