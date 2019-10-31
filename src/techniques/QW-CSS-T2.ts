@@ -7,7 +7,7 @@ import {CSSStylesheet} from '@qualweb/get-dom-puppeteer';
 import css from 'css';
 
 const technique: CSSTechnique = {
-  name: 'Specifying alignment either to the left OR right in CSS',
+  name: 'Specifying alignment either to the left or right in CSS',
   code: 'QW-CSS-T2',
   mapping: 'C19',
   description: 'This technique describes how to align blocks of text either left or right by setting the CSS text-align property.',
@@ -21,11 +21,11 @@ const technique: CSSTechnique = {
         name: '1.4.8',
         level: 'AAA',
         principle: 'Perceivable',
-        url: 'https://www.w3.org/WAI/WCAG21/Understanding/visual-presentation.html'
+        url: 'https://www.w3.org/WAI/WCAG21/Understanding/visual-presentation'
       }
     ],
     related: [],
-    url: {},
+    url: 'https://www.w3.org/WAI/WCAG21/Techniques/css/C19',
     passed: 0,
     warning: 0,
     failed: 0,
@@ -158,7 +158,7 @@ function extractInfo(cssObject: any, declaration: any, fileName: string): void {
       declaration['property'], declaration['value'], declaration['position']);
 
   } else {
-    fillEvaluation('failed', `Text block is not aligned either left nor right.`,
+    fillEvaluation('failed', `Text block is aligned neither left nor right.`,
       css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
       fileName, cssObject['selectors'].toString(), cssObject['position'],
       declaration['property'], declaration['value'], declaration['position']);
