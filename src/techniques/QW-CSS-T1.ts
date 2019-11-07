@@ -170,21 +170,22 @@ function extractInfo(cssObject: any, declaration: any, fileName: string): void {
   const names = ['xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large', 'xsmaller', 'larger'];
 
   if (declaration['value'].includes('px')) {
-    fillEvaluation('warning', `Element "font-size" style attribute uses "px"`,
+    fillEvaluation('failed', `Element "font-size" style attribute uses "px"`,
       css.stringify({type: 'stylesheet', stylesheet: {source: undefined, rules: [cssObject]}}),
       fileName, cssObject['selectors'].toString(), cssObject['position'],
       declaration['property'], declaration['value'], declaration['position'])
 
   } else if (declaration['value'].endsWith('em') || declaration['value'].endsWith('%') || names.includes(declaration['value'].trim()) ) {
-    //todo acrescentamos tambem o !important? || declaration['value'].endsWith('em!important') || declaration['value'].endsWith('%!important')
+    //todo acrescentamos tambem o !important? SIM! || declaration['value'].endsWith('em!important') || declaration['value'].endsWith('%!important')
+    //todo acrescentar initial, inherit, ex, ch, vw, vh, vmin, vmax
     fillEvaluation('passed', `Element "font-size" style attribute doesn\'t use "px"`,
       css.stringify({type: 'stylesheet', stylesheet: {source: undefined, rules: [cssObject]}}),
       fileName, cssObject['selectors'].toString(), cssObject['position'],
       declaration['property'], declaration['value'], declaration['position']);
 
+    //todo agarrar nos passed e todos os outros failed
+
   } else {
-    //todo inherit eh uma unknown metric... eh suposto?
-    //todo damos failed ou inapplicable?
     fillEvaluation('inapplicable', `Element has "font-size" style with unknown metric`,
       css.stringify({type: 'stylesheet', stylesheet: {source: undefined, rules: [cssObject]}}),
       fileName, cssObject['selectors'].toString(), cssObject['position'],
