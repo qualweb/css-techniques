@@ -72,6 +72,7 @@ function hasPrincipleAndLevels(principles: string[], levels: string[]): boolean 
 }
 
 async function execute(styleSheets: CSSStylesheet[]): Promise<void> {
+  console.log("executing")
 
   for (const styleSheet of styleSheets) {
     if(styleSheet.content && styleSheet.content.plain){
@@ -166,21 +167,23 @@ function loopDeclarations(cssObject: any, fileName: string): void {
 }
 
 function extractInfo(cssObject: any, declaration: any, fileName: string): void {
-  const names = ['xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large', 'xsmaller', 'larger'];
+  const names = ['xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large', 'xsmaller', 'larger','initial','inherit','ex','ch','vw','vh','vmin','vmax'];
+  let value = declaration['value'];
+  value = value.replace(" !important","");
 
-  if(declaration['value'].includes('px')){
-    fillEvaluation('warning', `Element "font-size" style attribute uses "px"`,
+  if(value.includes('px')){
+    fillEvaluation('failed', `Element "font-size" style attribute uses "px"`,
       css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
       fileName, cssObject['selectors'].toString(), cssObject['position'],
-      declaration['property'], declaration['value'], declaration['position'])
+      declaration['property'], value, declaration['position'])
 
-  } else if(declaration['value'].endsWith('em') || declaration['value'].endsWith('%') || names.includes(declaration['value'].trim())){
+  } else if(value.endsWith('em') || value.endsWith('%') || names.includes(value.trim())){
     fillEvaluation('passed', `Element "font-size" style attribute doesn\'t use "px"`,
       css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
       fileName, cssObject['selectors'].toString(), cssObject['position'],
-      declaration['property'], declaration['value'], declaration['position']);
+      declaration['property'], value, declaration['position']);
   } else {
-    fillEvaluation('inapplicable', `Element has "font-size" style with unknown metric`)
+    fillEvaluation('failed', `Element has "font-size" style with unknown metric`)
   }
 }
 
