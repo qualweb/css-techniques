@@ -8,11 +8,11 @@ const {getDom} = require('@qualweb/get-dom-puppeteer');
 describe('Technique QW-CSS-T2', function () {
   const tests = [
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/em.html',
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~aestriga/testeCSS-T2/teste1.html',
       outcome: 'failed'
     },
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/emImportant.html',
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~aestriga/testeCSS-T2/teste2.html',
       outcome: 'passed'
     }
   ];
@@ -35,7 +35,7 @@ describe('Technique QW-CSS-T2', function () {
         });
 
         const report = await executeCSST(stylesheets);
-        //console.log("TCL: report.techniques.length", report.techniques['QW-CSS-T1'].metadata);
+        console.log(report.techniques['QW-CSS-T2']);
         expect(report.techniques['QW-CSS-T2'].metadata.outcome).to.be.equal(test.outcome);
       });
     });

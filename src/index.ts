@@ -87,10 +87,15 @@ async function executeCSST(styleSheets: CSSStylesheet[]): Promise<CSSTechniquesR
   //     }
   //   }
   // }
-
+  techniques["QW-CSS-T1"].reset();
   await techniques["QW-CSS-T1"].execute(styleSheets);
   report.techniques["QW-CSS-T1"] = techniques["QW-CSS-T1"].getFinalResults();
   report.metadata[report.techniques["QW-CSS-T1"].metadata.outcome]++;
+
+  techniques["QW-CSS-T2"].reset();
+  await techniques["QW-CSS-T2"].execute(styleSheets);
+  report.techniques["QW-CSS-T2"] = techniques["QW-CSS-T2"].getFinalResults();
+  report.metadata[report.techniques["QW-CSS-T2"].metadata.outcome]++;
   return report;
 }
 
