@@ -101,6 +101,11 @@ async function executeCSST(styleSheets: CSSStylesheet[]): Promise<CSSTechniquesR
   await techniques["QW-CSS-T3"].execute(styleSheets);
   report.techniques["QW-CSS-T3"] = techniques["QW-CSS-T3"].getFinalResults();
   report.metadata[report.techniques["QW-CSS-T3"].metadata.outcome]++;
+
+  techniques["QW-CSS-T6"].reset();
+  await techniques["QW-CSS-T6"].execute(styleSheets);
+  report.techniques["QW-CSS-T6"] = techniques["QW-CSS-T6"].getFinalResults();
+  report.metadata[report.techniques["QW-CSS-T6"].metadata.outcome]++;
   return report;
 }
 

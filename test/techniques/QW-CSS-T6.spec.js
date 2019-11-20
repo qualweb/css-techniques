@@ -5,22 +5,14 @@ const {
 const {expect} = require('chai');
 const {getDom} = require('@qualweb/get-dom-puppeteer');
 
-describe('Technique QW-CSS-T3', function () {
+describe('Technique QW-CSS-T6', function () {
   const tests = [
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~aestriga/testeCSS-T3/teste1.html',
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~aestriga/testeCSS-T6/teste1.html',
       outcome: 'failed'
     },
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~aestriga/testeCSS-T3/teste2.html',
-      outcome: 'passed'
-    }, 
-    {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~aestriga/testeCSS-T3/teste3.html',
-      outcome: 'failed'
-    },
-    {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~aestriga/testeCSS-T3/teste4.html',
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~aestriga/testeCSS-T6/teste2.html',
       outcome: 'passed'
     }
   ];
@@ -40,7 +32,7 @@ describe('Technique QW-CSS-T3', function () {
 
 
         const report = await executeCSST(stylesheets);
-        expect(report.techniques['QW-CSS-T3'].metadata.outcome).to.be.equal(test.outcome);
+        expect(report.techniques['QW-CSS-T6'].metadata.outcome).to.be.equal(test.outcome);
       });
     });
   }
