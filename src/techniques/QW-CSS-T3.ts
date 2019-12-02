@@ -1,10 +1,10 @@
 'use strict';
 
-import _ from 'lodash';
-
-import {CSSTechnique, CSSTechniqueResult} from '@qualweb/css-techniques';
-import {CSSStylesheet} from '@qualweb/get-dom-puppeteer';
+import { CSSTechnique, CSSTechniqueResult } from '@qualweb/css-techniques';
+import { CSSStylesheet } from '@qualweb/core';
 import css from 'css';
+
+import Technique from './Technique.object';
 
 const technique: CSSTechnique = {
   name: 'Specifying line spacing in CSS',
@@ -36,165 +36,91 @@ const technique: CSSTechnique = {
   results: new Array<CSSTechniqueResult>()
 };
 
-function getTechniqueMapping(): string {
-  return technique.mapping;
-}
+class QW_CSS_T3 extends Technique {
 
-function hasPrincipleAndLevels(principles: string[], levels: string[]): boolean {
-  let has = false;
-  for (let sc of technique.metadata['success-criteria'] || []) {
-    if (principles.includes(sc.principle) && levels.includes(sc.level)) {
-      has = true;
-    }
-  }
-  return has;
-}
-
-async function execute(styleSheets: CSSStylesheet[]): Promise<void> {
-
-  for (const styleSheet of styleSheets) {
-    if(styleSheet.content && styleSheet.content.plain){
-      if (styleSheet.content.plain.includes("line-height")){
-        analyseAST(styleSheet.content.parsed, styleSheet.file);
-      }
-    }
-  }
-}
-
-function getFinalResults() {
-  outcomeTechnique();
-  return _.cloneDeep(technique);
-}
-
-function reset(): void {
-  technique.metadata.passed = 0;
-  technique.metadata.warning = 0;
-  technique.metadata.failed = 0;
-  technique.metadata.inapplicable = 0;
-  technique.results = new Array < CSSTechniqueResult > ();
-}
-
-function outcomeTechnique(): void {
-  if (technique.metadata.failed > 0) {
-    technique.metadata.outcome = 'failed';
-  } else if (technique.metadata.warning > 0) {
-    technique.metadata.outcome = 'warning';
-  } else if (technique.metadata.passed > 0) {
-    technique.metadata.outcome = 'passed';
-  } else {
-    technique.metadata.outcome = 'inapplicable';
+  constructor() {
+    super(technique);
   }
 
-  if (technique.results.length > 0) {
-    addDescription();
-  }
-}
-
-function addDescription(): void {
-  for (const result of technique.results || []) {
-    if (result.verdict === technique.metadata.outcome) {
-      technique.metadata.description = result.description;
-      break;
-    }
-  }
-}
-
-export {
-  getTechniqueMapping,
-  hasPrincipleAndLevels,
-  execute,
-  getFinalResults,
-  reset
-};
-
-
-function analyseAST(cssObject: any, fileName: string): void {
-  if (cssObject === undefined ||
-    cssObject['type'] === 'comment' ||
-    cssObject['type'] === 'keyframes' ||
-    cssObject['type'] === 'import'){ // ignore
-    return;
-  }
-  if (cssObject['type'] === 'rule' || cssObject['type'] === 'font-face' || cssObject['type'] === 'page') {
-      if(cssObject['selectors'])
-        loopDeclarations(cssObject, fileName)
-  } else {
-    if (cssObject['type'] === 'stylesheet') {
-      for (const key of cssObject['stylesheet']['rules']) {
-        analyseAST(key, fileName);
-      }
-    } else {
-      for (const key of cssObject['rules']) {
-        analyseAST(key, fileName);
-      }
-    }
-  }
-}
-
-function loopDeclarations(cssObject: any, fileName: string): void {
-  let declarations = cssObject['declarations'];
-  if(declarations){
-    for (const declaration of declarations) {
-  if (declaration['property'] && declaration['value'] ) {
-    if (declaration['property'] === 'line-height'){
-          extractInfo(cssObject, declaration, fileName);
+  async execute(styleSheets: CSSStylesheet[]): Promise<void> {
+    for (const styleSheet of styleSheets || []) {
+      if(styleSheet.content && styleSheet.content.plain){
+        if (styleSheet.content.plain.includes('line-height')){
+          this.analyseAST(styleSheet.content.parsed, styleSheet.file);
         }
       }
     }
   }
-}
 
-function extractInfo(cssObject: any, declaration: any, fileName: string): void {
-  if(declaration['value'].endsWith('%')){
-    let number = +declaration['value'].replace("%","");
-    if(number >= 150 && number <= 200){
-      fillEvaluation('passed', `Text block has line spacing between 150% and 200%`,
-      css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
-      fileName, cssObject['selectors'].toString(), cssObject['position'],
-      declaration['property'], declaration['value'], declaration['position']);
-    }else{
-      fillEvaluation('failed', `Text block doesn't have line spacing between 150% and 200%.`,
-      css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
-      fileName, cssObject['selectors'].toString(), cssObject['position'],
-      declaration['property'], declaration['value'], declaration['position']);
+  private analyseAST(cssObject: any, fileName: string): void {
+    if (cssObject === undefined ||
+      cssObject['type'] === 'comment' ||
+      cssObject['type'] === 'keyframes' ||
+      cssObject['type'] === 'import'){ // ignore
+      return;
     }
-  } else if(typeof +declaration['value'] === "number"){
-    if(+declaration['value'] >= 1.5 && +declaration['value'] <= 2){
-      fillEvaluation('passed', `Text block has line spacing between 150% and 200%`,
-      css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
-      fileName, cssObject['selectors'].toString(), cssObject['position'],
-      declaration['property'], declaration['value'], declaration['position']);
-    }else{
-      fillEvaluation('failed', `Text block doesn't have line spacing between 150% and 200%.`,
-      css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
-      fileName, cssObject['selectors'].toString(), cssObject['position'],
-      declaration['property'], declaration['value'], declaration['position']);
+    if (cssObject['type'] === 'rule' || cssObject['type'] === 'font-face' || cssObject['type'] === 'page') {
+        if(cssObject['selectors'])
+          this.loopDeclarations(cssObject, fileName)
+    } else {
+      if (cssObject['type'] === 'stylesheet') {
+        for (const key of cssObject['stylesheet']['rules'] || []) {
+          this.analyseAST(key, fileName);
+        }
+      } else {
+        for (const key of cssObject['rules'] || []) {
+          this.analyseAST(key, fileName);
+        }
+      }
     }
-  }else {
-    fillEvaluation('inapplicable', `Text block line-height property isn't percentage.`,
-      css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
-      fileName, cssObject['selectors'].toString(), cssObject['position'],
-      declaration['property'], declaration['value'], declaration['position']);
+  }
+
+  private loopDeclarations(cssObject: any, fileName: string): void {
+    let declarations = cssObject['declarations'];
+    if(declarations){
+      for (const declaration of declarations || []) {
+    if (declaration['property'] && declaration['value']) {
+      if (declaration['property'] === 'line-height'){
+            this.extractInfo(cssObject, declaration, fileName);
+          }
+        }
+      }
+    }
+  }
+
+  private extractInfo(cssObject: any, declaration: any, fileName: string): void {
+    if(declaration['value'].endsWith('%')){
+      let number = +declaration['value'].replace('%','');
+      if(number >= 150 && number <= 200){
+        super.fillEvaluation('passed', `Text block has line spacing between 150% and 200%`,
+        css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
+        fileName, cssObject['selectors'].toString(), cssObject['position'],
+        declaration['property'], declaration['value'], declaration['position']);
+      }else{
+        super.fillEvaluation('failed', `Text block doesn't have line spacing between 150% and 200%.`,
+        css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
+        fileName, cssObject['selectors'].toString(), cssObject['position'],
+        declaration['property'], declaration['value'], declaration['position']);
+      }
+    } else if(typeof +declaration['value'] === 'number'){
+      if(+declaration['value'] >= 1.5 && +declaration['value'] <= 2){
+        super.fillEvaluation('passed', `Text block has line spacing between 150% and 200%`,
+        css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
+        fileName, cssObject['selectors'].toString(), cssObject['position'],
+        declaration['property'], declaration['value'], declaration['position']);
+      }else{
+        super.fillEvaluation('failed', `Text block doesn't have line spacing between 150% and 200%.`,
+        css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
+        fileName, cssObject['selectors'].toString(), cssObject['position'],
+        declaration['property'], declaration['value'], declaration['position']);
+      }
+    }else {
+      super.fillEvaluation('inapplicable', `Text block line-height property isn't percentage.`,
+        css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
+        fileName, cssObject['selectors'].toString(), cssObject['position'],
+        declaration['property'], declaration['value'], declaration['position']);
+    }
   }
 }
 
-function fillEvaluation(verdict: "" | "passed" | "failed" | "warning" | "inapplicable", description: string,
-                        cssCode?: string, stylesheetFile?: string,
-                        selectorValue?: string, selectorPosition?: css.Position,
-                        propertyName?: string, propertyValue?: string, propertyPosition?: css.Position) {
-
-  const evaluation: CSSTechniqueResult = {
-    verdict: verdict,
-    description: description
-  };
-
-  if (verdict !== 'inapplicable' && selectorValue && propertyName && propertyValue){
-    evaluation.cssCode = cssCode;
-    evaluation.stylesheetFile = stylesheetFile;
-    evaluation.selector = {value: selectorValue, position: selectorPosition};
-    evaluation.property = {name: propertyName, value: propertyValue, position: propertyPosition};
-  }
-
-  technique.metadata[verdict]++;
-  technique.results.push(_.clone(evaluation));
-}
+export = QW_CSS_T3;

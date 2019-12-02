@@ -4,48 +4,51 @@ import { CSSTechnique, CSSTechniqueResult } from '@qualweb/css-techniques';
 import { CSSStylesheet } from '@qualweb/core';
 import css from 'css';
 
-import Technique from './Technique.object';
+import Technique from './Technique.object'; 
 
 const technique: CSSTechnique = {
   name: 'Using "percent, em, names" for font sizes',
-  code: 'QW-CSS-T1',
-  mapping: 'C121314',
-  description: 'This technique checks that all font-size attribute uses percent, em or names',
+  code: 'QW-CSS-T4',
+  mapping: 'C22',
+  description: 'The objective of this technique is to demonstrate how CSS can be used to control the visual presentation of text. This will allow users to modify, via the user agent, the visual characteristics of the text to meet their requirement. The text characteristics include aspects such as size, color, font family and relative placement.',
   metadata: {
     target: {
       element: '*',
       attributes: 'font-size'
     },
     'success-criteria': [{
-      name: '1.4.4',
-      level: 'AA',
-      principle: 'Perceivable',
-      url: 'https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-scale.html'
-    },
+        name: '1.3.1',
+        level: 'A',
+        principle: 'Perceivable',
+        url: 'https://www.w3.org/WAI/WCAG21/Understanding/info-and-relationships'
+      },
+      {
+        name: '1.4.4',
+        level: 'AA',
+        principle: 'Perceivable',
+        url: 'https://www.w3.org/WAI/WCAG21/Understanding/resize-text'
+      },
       {
         name: '1.4.5',
         level: 'AA',
         principle: 'Perceivable',
-        url: 'https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-text-presentation.html'
-      },
-      {
-        name: '1.4.8',
-        level: 'AAA',
-        principle: 'Perceivable',
-        url: 'https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-visual-presentation.html'
+        url: 'https://www.w3.org/WAI/WCAG21/Understanding/images-of-text'
       },
       {
         name: '1.4.9	',
         level: 'AAA',
         principle: 'Perceivable',
-        url: 'https://www.w3.org/WAI/GL/UNDERSTANDING-WCAG20/visual-audio-contrast-text-images.html'
+        url: 'https://www.w3.org/WAI/WCAG21/Understanding/images-of-text-no-exception'
       }
     ],
-    related: ['C12', 'C13', 'C14'],
+    related: ['C8', 'C12', 'C13', 'C14', 'C21', 'SCR34'],
     url: {
-      'C12': 'https://www.w3.org/TR/WCAG20-TECHS/C12.html',
-      'C13': 'https://www.w3.org/TR/WCAG20-TECHS/C13.html',
-      'C14': 'https://www.w3.org/TR/WCAG20-TECHS/C14.html'
+      'C8' : 'https://www.w3.org/WAI/WCAG21/Techniques/css/C8',
+      'C12': 'https://www.w3.org/WAI/WCAG21/Techniques/css/C12',
+      'C13': 'https://www.w3.org/WAI/WCAG21/Techniques/css/C13',
+      'C14': 'https://www.w3.org/WAI/WCAG21/Techniques/css/C14',
+      'C21': 'https://www.w3.org/WAI/WCAG21/Techniques/css/C21',
+      'SCR34' : 'https://www.w3.org/WAI/WCAG21/Techniques/client-side-script/SCR34'
     },
     passed: 0,
     warning: 0,
@@ -57,7 +60,7 @@ const technique: CSSTechnique = {
   results: new Array<CSSTechniqueResult>()
 };
 
-class QW_CSS_T1 extends Technique {
+class QW_CSS_T4 extends Technique {
 
   constructor() {
     super(technique);
@@ -118,7 +121,7 @@ class QW_CSS_T1 extends Technique {
         declaration['property'], declaration['value'], declaration['position'])
 
     } else if(declaration['value'].endsWith('em') || declaration['value'].endsWith('%') || names.includes(declaration['value'].trim())){
-      super.fillEvaluation('passed', `Element 'font-size' style attribute doesn't use 'px'`,
+      super.fillEvaluation('passed', `Element 'font-size' style attribute doesn\'t use 'px'`,
         css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
         fileName, cssObject['selectors'].toString(), cssObject['position'],
         declaration['property'], declaration['value'], declaration['position']);
@@ -128,4 +131,4 @@ class QW_CSS_T1 extends Technique {
   }
 }
 
-export = QW_CSS_T1;
+export = QW_CSS_T4;

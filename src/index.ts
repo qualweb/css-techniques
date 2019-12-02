@@ -1,14 +1,7 @@
-/**
- * 
- */
 'use strict';
 
-
 import { CSSTOptions, CSSTechniquesReport } from '@qualweb/css-techniques';
-import {CSSStylesheet} from '@qualweb/get-dom-puppeteer';
-// const stew = new(require('stew-select')).Stew();
-
-// import mapping from './techniques/mapping.json';
+import { CSSStylesheet } from '@qualweb/core';
 
 import { techniques, techniquesToExecute } from './techniques';
 
@@ -55,6 +48,29 @@ function configure(options: CSSTOptions): void {
   }
 }
 
+function resetConfiguration(): void {
+  for (const technique in techniquesToExecute) {
+    techniquesToExecute[technique] = true;
+  }
+}
+
+async function executeTechnique(report: CSSTechniquesReport, technique: string, styleSheets: CSSStylesheet[]): Promise<void> {
+  await techniques[technique].execute(styleSheets);
+  report.techniques[technique] = techniques[technique].getFinalResults();
+  report.metadata[report.techniques[technique].metadata.outcome]++;
+  techniques[technique].reset();
+}
+
+async function executeTechniques(report: CSSTechniquesReport, styleSheets: CSSStylesheet[]): Promise<void> {
+  const promises = new Array<any>();
+  for (const technique in techniques || {}) {
+    if (techniquesToExecute[technique]) {
+      promises.push(executeTechnique(report, technique, styleSheets));
+    }
+  }
+  await Promise.all(promises);
+}
+
 async function executeCSST(styleSheets: CSSStylesheet[]): Promise<CSSTechniquesReport> {
   
   const report: CSSTechniquesReport = {
@@ -68,45 +84,13 @@ async function executeCSST(styleSheets: CSSStylesheet[]): Promise<CSSTechniquesR
     techniques: {}
   };
 
-  // const selectors = Object.keys(mapping);
-  
-  // for (const selector of selectors || []) {
-  //   for (const technique of mapping[selector] || []) {
-  //     if (techniquesToExecute[technique]) {        
-  //       let elements = stew.select(processedHTML, selector);
-  //       if (elements.length > 0) {
-  //         for (const elem of elements || []) {
-  //           await techniques[technique].execute(elem, processedHTML);
-  //         }
-  //       } else {
-  //         await techniques[technique].execute(undefined, processedHTML);
-  //       }
-  //       report.techniques[technique] = techniques[technique].getFinalResults();
-  //       report.metadata[report.techniques[technique].metadata.outcome]++;
-  //       techniques[technique].reset();
-  //     }
-  //   }
-  // }
-  techniques["QW-CSS-T1"].reset();
-  await techniques["QW-CSS-T1"].execute(styleSheets);
-  report.techniques["QW-CSS-T1"] = techniques["QW-CSS-T1"].getFinalResults();
-  report.metadata[report.techniques["QW-CSS-T1"].metadata.outcome]++;
+  await executeTechniques(report, styleSheets);
 
-  techniques["QW-CSS-T2"].reset();
-  await techniques["QW-CSS-T2"].execute(styleSheets);
-  report.techniques["QW-CSS-T2"] = techniques["QW-CSS-T2"].getFinalResults();
-  report.metadata[report.techniques["QW-CSS-T2"].metadata.outcome]++;
-
-  techniques["QW-CSS-T3"].reset();
-  await techniques["QW-CSS-T3"].execute(styleSheets);
-  report.techniques["QW-CSS-T3"] = techniques["QW-CSS-T3"].getFinalResults();
-  report.metadata[report.techniques["QW-CSS-T3"].metadata.outcome]++;
-
-  techniques["QW-CSS-T6"].reset();
-  await techniques["QW-CSS-T6"].execute(styleSheets);
-  report.techniques["QW-CSS-T6"] = techniques["QW-CSS-T6"].getFinalResults();
-  report.metadata[report.techniques["QW-CSS-T6"].metadata.outcome]++;
   return report;
 }
 
-export { configure, executeCSST };
+export { 
+  configure, 
+  executeCSST, 
+  resetConfiguration 
+};

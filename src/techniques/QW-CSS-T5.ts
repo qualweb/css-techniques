@@ -4,48 +4,32 @@ import { CSSTechnique, CSSTechniqueResult } from '@qualweb/css-techniques';
 import { CSSStylesheet } from '@qualweb/core';
 import css from 'css';
 
+const sectionAndGrouping = ['span', 'article', 'section', 'nav', 'aside', 'hgroup', 'header', 'footer', 'address', 'p', 'hr'
+        , 'blockquote', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'ul', 'ol', 'dd', 'dt', 'dl', 'figcaption'];
+
 import Technique from './Technique.object';
 
 const technique: CSSTechnique = {
-  name: 'Using "percent, em, names" for font sizes',
-  code: 'QW-CSS-T1',
-  mapping: 'C121314',
-  description: 'This technique checks that all font-size attribute uses percent, em or names',
+  name: 'Using percentage values in CSS for container sizes',
+  code: 'QW-CSS-T5',
+  mapping: 'C24',
+  description: 'The objective of this technique is to enable users to increase the size of text without having to scroll horizontally to read that text. To use this technique, an author specifies the width of text containers using percent values.',
   metadata: {
     target: {
       element: '*',
-      attributes: 'font-size'
+      attributes: 'width'
     },
-    'success-criteria': [{
-      name: '1.4.4',
-      level: 'AA',
-      principle: 'Perceivable',
-      url: 'https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-scale.html'
-    },
-      {
-        name: '1.4.5',
-        level: 'AA',
-        principle: 'Perceivable',
-        url: 'https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-text-presentation.html'
-      },
+    'success-criteria': [
       {
         name: '1.4.8',
         level: 'AAA',
         principle: 'Perceivable',
-        url: 'https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-visual-presentation.html'
-      },
-      {
-        name: '1.4.9	',
-        level: 'AAA',
-        principle: 'Perceivable',
-        url: 'https://www.w3.org/WAI/GL/UNDERSTANDING-WCAG20/visual-audio-contrast-text-images.html'
+        url: 'https://www.w3.org/WAI/WCAG21/Techniques/css/C24'
       }
     ],
-    related: ['C12', 'C13', 'C14'],
+    related: ['C20'],
     url: {
-      'C12': 'https://www.w3.org/TR/WCAG20-TECHS/C12.html',
-      'C13': 'https://www.w3.org/TR/WCAG20-TECHS/C13.html',
-      'C14': 'https://www.w3.org/TR/WCAG20-TECHS/C14.html'
+      'C20': 'https://www.w3.org/WAI/WCAG21/Techniques/css/C20'
     },
     passed: 0,
     warning: 0,
@@ -57,7 +41,7 @@ const technique: CSSTechnique = {
   results: new Array<CSSTechniqueResult>()
 };
 
-class QW_CSS_T1 extends Technique {
+class QW_CSS_T5 extends Technique {
 
   constructor() {
     super(technique);
@@ -66,9 +50,7 @@ class QW_CSS_T1 extends Technique {
   async execute(styleSheets: CSSStylesheet[]): Promise<void> {
     for (const styleSheet of styleSheets || []) {
       if(styleSheet.content && styleSheet.content.plain){
-        if (styleSheet.content.plain.includes('font-size')){
-          this.analyseAST(styleSheet.content.parsed, styleSheet.file);
-        }
+        this.analyseAST(styleSheet.content.parsed, styleSheet.file);
       }
     }
   }
@@ -100,7 +82,7 @@ class QW_CSS_T1 extends Technique {
     if(declarations){
       for (const declaration of declarations || []) {
         if (declaration['property'] && declaration['value'] ) {
-          if (declaration['property'] === 'font-size'){
+          if (declaration['property'] === 'width'){
             this.extractInfo(cssObject, declaration, fileName);
           }
         }
@@ -109,23 +91,17 @@ class QW_CSS_T1 extends Technique {
   }
 
   private extractInfo(cssObject: any, declaration: any, fileName: string): void {
-    const names = ['xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large', 'xsmaller', 'larger'];
-
-    if(declaration['value'].includes('px')){
-      super.fillEvaluation('warning', `Element 'font-size' style attribute uses 'px'`,
+    if(sectionAndGrouping.includes(cssObject['selectors'][0])){
+      if(declaration['value'].endsWith('%')){
+        super.fillEvaluation('warning', `Element 'width' style attribute uses '%'`,
         css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
         fileName, cssObject['selectors'].toString(), cssObject['position'],
         declaration['property'], declaration['value'], declaration['position'])
-
-    } else if(declaration['value'].endsWith('em') || declaration['value'].endsWith('%') || names.includes(declaration['value'].trim())){
-      super.fillEvaluation('passed', `Element 'font-size' style attribute doesn't use 'px'`,
-        css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
-        fileName, cssObject['selectors'].toString(), cssObject['position'],
-        declaration['property'], declaration['value'], declaration['position']);
-    } else {
-      super.fillEvaluation('inapplicable', `Element has 'font-size' style with unknown metric`)
-    }
+      }else {
+        super.fillEvaluation('failed', `Element 'width' style attribute doesn't use '%'`)
+      }
+    } 
   }
 }
 
-export = QW_CSS_T1;
+export = QW_CSS_T5;
