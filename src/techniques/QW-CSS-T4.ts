@@ -178,7 +178,7 @@ function extractInfo(cssObject: any, declaration: any, fileName: string): void {
       declaration['property'], declaration['value'], declaration['position'])
 
   } else {
-    fillEvaluation('inapplicable', `Element has "font-size" style with unknown metric`)
+    fillEvaluation('inapplicable', `Element doesn't uses CSS properties were used to control the visual presentation of text`)
   }
 }
 
