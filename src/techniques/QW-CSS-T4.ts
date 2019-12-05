@@ -41,7 +41,7 @@ const technique: CSSTechnique = {
         url: 'https://www.w3.org/WAI/WCAG21/Understanding/images-of-text-no-exception'
       }
     ],
-    related: ['C8', 'C12', 'C13', 'C14', 'C21', 'SCR34'],
+    related: [],
     url: {
       'C8' : 'https://www.w3.org/WAI/WCAG21/Techniques/css/C8',
       'C12': 'https://www.w3.org/WAI/WCAG21/Techniques/css/C12',
@@ -160,28 +160,23 @@ function loopDeclarations(cssObject: any, fileName: string): void {
   if(declarations){
     for (const declaration of declarations) {
       if (declaration['property'] && declaration['value'] ) {
-        if (declaration['property'] === 'font-size'){
           extractInfo(cssObject, declaration, fileName);
-        }
       }
     }
   }
 }
 
 function extractInfo(cssObject: any, declaration: any, fileName: string): void {
-  const names = ['xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large', 'xsmaller', 'larger'];
+  const names = ['font-family', 'text-align', 'font-size',
+  'font-style', 'font-weight', 'color', 'line-height', 'text-transform', 'letter-spacing',
+  'background-image', 'first-line', ':first-letter', ':before', ':after'];
 
-  if(declaration['value'].includes('px')){
-    fillEvaluation('warning', `Element "font-size" style attribute uses "px"`,
+  if(names.includes(declaration['property'])){
+    fillEvaluation('passed', `Element uses CSS properties were used to control the visual presentation of text`,
       css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
       fileName, cssObject['selectors'].toString(), cssObject['position'],
       declaration['property'], declaration['value'], declaration['position'])
 
-  } else if(declaration['value'].endsWith('em') || declaration['value'].endsWith('%') || names.includes(declaration['value'].trim())){
-    fillEvaluation('passed', `Element "font-size" style attribute doesn\'t use "px"`,
-      css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
-      fileName, cssObject['selectors'].toString(), cssObject['position'],
-      declaration['property'], declaration['value'], declaration['position']);
   } else {
     fillEvaluation('inapplicable', `Element has "font-size" style with unknown metric`)
   }
