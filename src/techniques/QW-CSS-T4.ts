@@ -4,7 +4,7 @@ import { CSSTechnique, CSSTechniqueResult } from '@qualweb/css-techniques';
 import { CSSStylesheet } from '@qualweb/core';
 import css from 'css';
 
-import Technique from './Technique.object'; 
+import Technique from './Technique.object';
 
 const technique: CSSTechnique = {
   name: 'Using "percent, em, names" for font sizes',
@@ -41,7 +41,7 @@ const technique: CSSTechnique = {
         url: 'https://www.w3.org/WAI/WCAG21/Understanding/images-of-text-no-exception'
       }
     ],
-    related: ['C8', 'C12', 'C13', 'C14', 'C21', 'SCR34'],
+    related: [],
     url: {
       'C8' : 'https://www.w3.org/WAI/WCAG21/Techniques/css/C8',
       'C12': 'https://www.w3.org/WAI/WCAG21/Techniques/css/C12',
@@ -65,18 +65,16 @@ class QW_CSS_T4 extends Technique {
   constructor() {
     super(technique);
   }
-
   async execute(styleSheets: CSSStylesheet[]): Promise<void> {
-    for (const styleSheet of styleSheets || []) {
+    for (const styleSheet of styleSheets) {
       if(styleSheet.content && styleSheet.content.plain){
-        if (styleSheet.content.plain.includes('font-size')){
+        if (styleSheet.content.plain.includes("font-size")){
           this.analyseAST(styleSheet.content.parsed, styleSheet.file);
         }
       }
     }
   }
-
-  private analyseAST(cssObject: any, fileName: string): void {
+  analyseAST(cssObject: any, fileName: string): void {
     if (cssObject === undefined ||
       cssObject['type'] === 'comment' ||
       cssObject['type'] === 'keyframes' ||
@@ -87,48 +85,46 @@ class QW_CSS_T4 extends Technique {
       this.loopDeclarations(cssObject, fileName)
     } else {
       if (cssObject['type'] === 'stylesheet') {
-        for (const key of cssObject['stylesheet']['rules'] || []) {
+        for (const key of cssObject['stylesheet']['rules']) {
           this.analyseAST(key, fileName);
         }
       } else {
-        for (const key of cssObject['rules'] || []) {
+        for (const key of cssObject['rules']) {
           this.analyseAST(key, fileName);
         }
       }
     }
   }
-
-  private loopDeclarations(cssObject: any, fileName: string): void {
+  
+  loopDeclarations(cssObject: any, fileName: string): void {
+  
     let declarations = cssObject['declarations'];
     if(declarations){
-      for (const declaration of declarations || []) {
+      for (const declaration of declarations) {
         if (declaration['property'] && declaration['value'] ) {
-          if (declaration['property'] === 'font-size'){
             this.extractInfo(cssObject, declaration, fileName);
-          }
         }
       }
     }
   }
-
-  private extractInfo(cssObject: any, declaration: any, fileName: string): void {
-    const names = ['xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large', 'xsmaller', 'larger'];
-
-    if(declaration['value'].includes('px')){
-      super.fillEvaluation('warning', `Element 'font-size' style attribute uses 'px'`,
+  
+  extractInfo(cssObject: any, declaration: any, fileName: string): void {
+    const names = ['font-family', 'text-align', 'font-size',
+    'font-style', 'font-weight', 'color', 'line-height', 'text-transform', 'letter-spacing',
+    'background-image', 'first-line', ':first-letter', ':before', ':after'];
+  
+    if(names.includes(declaration['property'])){
+      super.fillEvaluation('passed', `Element uses CSS properties were used to control the visual presentation of text`,
         css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
         fileName, cssObject['selectors'].toString(), cssObject['position'],
         declaration['property'], declaration['value'], declaration['position'])
-
-    } else if(declaration['value'].endsWith('em') || declaration['value'].endsWith('%') || names.includes(declaration['value'].trim())){
-      super.fillEvaluation('passed', `Element 'font-size' style attribute doesn\'t use 'px'`,
-        css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
-        fileName, cssObject['selectors'].toString(), cssObject['position'],
-        declaration['property'], declaration['value'], declaration['position']);
+  
     } else {
-      super.fillEvaluation('inapplicable', `Element has 'font-size' style with unknown metric`)
+      super.fillEvaluation('inapplicable', `Element doesn't uses CSS properties were used to control the visual presentation of text`)
     }
   }
+
 }
+
 
 export = QW_CSS_T4;
