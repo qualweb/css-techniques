@@ -4,6 +4,7 @@ import QW_CSS_T3 from './techniques/QW-CSS-T3';
 import QW_CSS_T4 from './techniques/QW-CSS-T4';
 import QW_CSS_T5 from './techniques/QW-CSS-T5';
 import QW_CSS_T6 from './techniques/QW-CSS-T6';
+import QW_CSS_T9 from './techniques/QW-CSS-T9';
 
 const techniques = {
   'QW-CSS-T1': new QW_CSS_T1(),
@@ -11,7 +12,8 @@ const techniques = {
   'QW-CSS-T3': new QW_CSS_T3(),
   'QW-CSS-T4': new QW_CSS_T4(),
   'QW-CSS-T5': new QW_CSS_T5(),
-  'QW-CSS-T6': new QW_CSS_T6()
+  'QW-CSS-T6': new QW_CSS_T6(),
+  'QW-CSS-T9': new QW_CSS_T9()
 };
 
 const techniquesToExecute = {
@@ -20,7 +22,8 @@ const techniquesToExecute = {
   'QW-CSS-T3': true,
   'QW-CSS-T4': true,
   'QW-CSS-T5': true,
-  'QW-CSS-T6': true
+  'QW-CSS-T6': true,
+  'QW-CSS-T9': true
 };
 
 export {

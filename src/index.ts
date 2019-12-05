@@ -64,6 +64,7 @@ async function executeTechnique(report: CSSTechniquesReport, technique: string, 
 async function executeTechniques(report: CSSTechniquesReport, styleSheets: CSSStylesheet[]): Promise<void> {
   const promises = new Array<any>();
   for (const technique in techniques || {}) {
+    console.log(technique);
     if (techniquesToExecute[technique]) {
       promises.push(executeTechnique(report, technique, styleSheets));
     }
