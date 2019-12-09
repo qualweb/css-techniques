@@ -2,7 +2,6 @@
 
 import { CSSTOptions, CSSTechniquesReport } from '@qualweb/css-techniques';
 import { CSSStylesheet } from '@qualweb/core';
-
 import { techniques, techniquesToExecute } from './techniques';
 
 function configure(options: CSSTOptions): void {
@@ -54,25 +53,25 @@ function resetConfiguration(): void {
   }
 }
 
-async function executeTechnique(report: CSSTechniquesReport, technique: string, styleSheets: CSSStylesheet[]): Promise<void> {
-  await techniques[technique].execute(styleSheets);
+async function executeTechnique(report: CSSTechniquesReport, technique: string, styleSheets: CSSStylesheet[], mappedDOM: any): Promise<void> {
+  await techniques[technique].execute(styleSheets, mappedDOM);
   report.techniques[technique] = techniques[technique].getFinalResults();
   report.metadata[report.techniques[technique].metadata.outcome]++;
   techniques[technique].reset();
 }
 
-async function executeTechniques(report: CSSTechniquesReport, styleSheets: CSSStylesheet[]): Promise<void> {
+async function executeTechniques(report: CSSTechniquesReport, styleSheets: CSSStylesheet[], mappedDOM: any): Promise<void> {
   const promises = new Array<any>();
   for (const technique in techniques || {}) {
     if (techniquesToExecute[technique]) {
-      promises.push(executeTechnique(report, technique, styleSheets));
+      promises.push(executeTechnique(report, technique, styleSheets, mappedDOM));
     }
   }
   await Promise.all(promises);
 }
 
-async function executeCSST(styleSheets: CSSStylesheet[]): Promise<CSSTechniquesReport> {
-  
+async function executeCSST(styleSheets: CSSStylesheet[], mappedDOM: any): Promise<CSSTechniquesReport> {
+
   const report: CSSTechniquesReport = {
     type: 'css-techniques',
     metadata: {
@@ -84,13 +83,13 @@ async function executeCSST(styleSheets: CSSStylesheet[]): Promise<CSSTechniquesR
     techniques: {}
   };
 
-  await executeTechniques(report, styleSheets);
+  await executeTechniques(report, styleSheets, mappedDOM);
 
   return report;
 }
 
-export { 
-  configure, 
-  executeCSST, 
-  resetConfiguration 
+export {
+  configure,
+  executeCSST,
+  resetConfiguration
 };

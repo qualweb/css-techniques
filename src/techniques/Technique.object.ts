@@ -60,7 +60,7 @@ abstract class Technique {
       evaluation.selector = {value: selectorValue, position: selectorPosition};
       evaluation.property = {name: propertyName, value: propertyValue, position: propertyPosition};
     }
-    
+
     this.addEvaluationResult(evaluation);
   }
 
@@ -69,7 +69,7 @@ abstract class Technique {
     this.technique.metadata[result.verdict]++;
   }
 
-  abstract async execute(styleSheets: CSSStylesheet[]): Promise<void>;
+  abstract async execute(styleSheets: CSSStylesheet[], mappedDOM: any): Promise<void>;
 
   public getFinalResults() {
     this.outcomeTechnique();
