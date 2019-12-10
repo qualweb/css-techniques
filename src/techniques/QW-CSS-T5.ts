@@ -3,7 +3,7 @@
 import { CSSTechnique, CSSTechniqueResult } from '@qualweb/css-techniques';
 import { CSSStylesheet } from '@qualweb/core';
 import css from 'css';
-
+import { CssUtils } from '@qualweb/util';
 const sectionAndGrouping = ['span', 'article', 'section', 'nav', 'aside', 'hgroup', 'header', 'footer', 'address', 'p', 'hr'
         , 'blockquote', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'ul', 'ol', 'dd', 'dt', 'dl', 'figcaption'];
 
@@ -92,7 +92,7 @@ class QW_CSS_T5 extends Technique {
 
   private extractInfo(cssObject: any, declaration: any, fileName: string): void {
     if(sectionAndGrouping.includes(cssObject['selectors'][0])){
-      if(declaration['value'].endsWith('%')){
+      if(CssUtils.trimImportant(declaration['value']).endsWith('%')){
         super.fillEvaluation('warning', `Element 'width' style attribute uses '%'`,
         css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
         fileName, cssObject['selectors'].toString(), cssObject['position'],

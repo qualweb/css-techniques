@@ -111,7 +111,6 @@ class QW_CSS_T1 extends Technique {
   private extractInfo(cssObject: any, declaration: any, fileName: string): void {
     const names = ['xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large', 'xsmaller', 'larger'];
 
-    console.log("TCL: QW_CSS_T1 -> declaration['value']", declaration['value'])
     if(CssUtils.trimImportant(declaration['value']).includes('px')){
       super.fillEvaluation('failed', `Element 'font-size' style attribute uses 'px'`,
         css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),

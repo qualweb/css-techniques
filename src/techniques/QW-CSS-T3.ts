@@ -3,7 +3,7 @@
 import { CSSTechnique, CSSTechniqueResult } from '@qualweb/css-techniques';
 import { CSSStylesheet } from '@qualweb/core';
 import css from 'css';
-
+import { CssUtils } from '@qualweb/util';
 import Technique from './Technique.object';
 
 const technique: CSSTechnique = {
@@ -89,7 +89,7 @@ class QW_CSS_T3 extends Technique {
   }
 
   private extractInfo(cssObject: any, declaration: any, fileName: string): void {
-    if(declaration['value'].endsWith('%')){
+    if(CssUtils.trimImportant(declaration['value']).endsWith('%')){
       let number = +declaration['value'].replace('%','');
       if(number >= 150 && number <= 200){
         super.fillEvaluation('passed', `Text block has line spacing between 150% and 200%`,
