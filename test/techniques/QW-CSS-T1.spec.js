@@ -39,19 +39,19 @@ describe('Technique QW-CSS-T1', function () {
     },
     {
       url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/initial.html',
-      outcome: 'failed'
+      outcome: 'inapplicable'
     },
     {
       url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/pt.html',
-      outcome: 'failed'
+      outcome: 'inapplicable'
     },
     {
       url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/zero.html',
-      outcome: 'failed'
+      outcome: 'inapplicable'
     },
     {
       url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/larg.html',
-      outcome: 'failed'
+      outcome: 'inapplicable'
     },
   ];
   let browser;
