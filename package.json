@@ -12,6 +12,7 @@
     "test-t4": "mocha test/techniques/QW-CSS-T4.spec.js",
     "test-t5": "mocha test/techniques/QW-CSS-T5.spec.js",
     "test-t6": "mocha test/techniques/QW-CSS-T6.spec.js",
+    "test-t7": "mocha test/techniques/QW-CSS-T7.spec.js",
     "clean": "node clean.js",
     "build": "npm run clean && tsc --build",
     "pub": "npm run build && npm publish --access=public"
@@ -42,9 +43,12 @@
     "chai": "^4.2.0",
     "mocha": "^6.2.0",
     "tslint": "^5.20.0",
-    "typescript": "^3.6.3"
+    "typescript": "^3.6.3",
+    "puppeteer": "^2.0.0"
   },
   "dependencies": {
+    "@qualweb/get-dom-puppeteer": "^0.1.2",
+    "@qualweb/util": "^0.2.5",
     "css": "^2.2.4",
     "lodash": "^4.17.15"
   }
