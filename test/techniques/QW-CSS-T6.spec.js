@@ -3,7 +3,9 @@ const {
   executeCSST
 } = require('../../dist/index');
 const {expect} = require('chai');
-const {getDom} = require('@qualweb/get-dom-puppeteer');
+
+const puppeteer = require('puppeteer');
+const { getDom } = require('../getDom');
 
 describe('Technique QW-CSS-T6', function () {
   const tests = [
@@ -16,7 +18,10 @@ describe('Technique QW-CSS-T6', function () {
       outcome: 'passed'
     }
   ];
-
+  let browser;
+  it("pup open", async function () {
+    browser = await puppeteer.launch();
+  });
   let i = 0;
   let lastOutcome = 'inapplicable';
   for (const test of tests || []) {
@@ -28,12 +33,15 @@ describe('Technique QW-CSS-T6', function () {
     describe(`${test.outcome.charAt(0).toUpperCase() + test.outcome.slice(1)} example ${i}`, function () {
       it(`should have outcome="${test.outcome}"`, async function () {
         this.timeout(10 * 1000);
-        const {stylesheets} = await getDom(test.url);
-
-
+        const {stylesheets} = await getDom(browser,test.url);
         const report = await executeCSST(stylesheets);
         expect(report.techniques['QW-CSS-T6'].metadata.outcome).to.be.equal(test.outcome);
       });
     });
   }
+  describe(``,  function () {
+    it(`pup shutdown`, async function () {
+      await browser.close();
+    });
+  });
 });
