@@ -4,9 +4,6 @@ import { CSSTechnique, CSSTechniqueResult } from '@qualweb/css-techniques';
 import { CSSStylesheet } from '@qualweb/core';
 import css from 'css';
 
-const sectionAndGrouping = ['span', 'article', 'section', 'nav', 'aside', 'hgroup', 'header', 'footer', 'address', 'p', 'hr'
-        , 'blockquote', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'ul', 'ol', 'dd', 'dt', 'dl', 'figcaption'];
-
 import Technique from './Technique.object';
 
 const technique: CSSTechnique = {
@@ -42,6 +39,8 @@ const technique: CSSTechnique = {
 };
 
 class QW_CSS_T5 extends Technique {
+
+  containers = ['span', 'article', 'section', 'nav', 'aside', 'hgroup', 'header', 'footer', 'address', 'p', 'hr', 'blockquote', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'ul', 'ol', 'dd', 'dt', 'dl', 'figcaption']
 
   constructor() {
     super(technique);
@@ -91,7 +90,7 @@ class QW_CSS_T5 extends Technique {
   }
 
   private extractInfo(cssObject: any, declaration: any, fileName: string): void {
-    if(sectionAndGrouping.includes(cssObject['selectors'][0])){
+    if(cssObject['selectors'] && this.selectorIsContainer(cssObject['selectors'])){
       if(declaration['value'].endsWith('%')){
         super.fillEvaluation('warning', `Element 'width' style attribute uses '%'`,
         css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
@@ -101,6 +100,18 @@ class QW_CSS_T5 extends Technique {
         super.fillEvaluation('failed', `Element 'width' style attribute doesn't use '%'`)
       }
     } 
+  }
+
+  private selectorIsContainer(selectors: Array<string>): boolean{
+
+    for(const selector of selectors){
+      let splitSelector = selector.split(" ");
+      for (const selector2 of splitSelector){
+        if(this.containers.includes(selector2))
+          return true;
+      }
+    }
+    return false
   }
 }
 
