@@ -71,9 +71,9 @@ describe('Technique QW-CSS-T1', function () {
         this.timeout(10 * 1000);
         const {stylesheets} = await getDom(browser,test.url);
 
-        // configure({
-        //   techniques: ["QW-CSS-T1"]
-        // });
+        configure({
+          techniques: ["QW-CSS-T1"]
+        });
 
         const report = await executeCSST(stylesheets);
         //console.log("TCL: report.techniques.length", report.techniques['QW-CSS-T1'].metadata);
