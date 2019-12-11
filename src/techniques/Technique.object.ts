@@ -69,7 +69,7 @@ abstract class Technique {
     this.technique.metadata[result.verdict]++;
   }
 
-  abstract async execute(styleSheets: CSSStylesheet[]): Promise<void>;
+  abstract async execute(styleSheets: CSSStylesheet[], mappedDOM: any): Promise<void>;
 
   public getFinalResults() {
     this.outcomeTechnique();

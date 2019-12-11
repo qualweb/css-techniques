@@ -3,7 +3,7 @@
 import { CSSTechnique, CSSTechniqueResult } from '@qualweb/css-techniques';
 import { CSSStylesheet } from '@qualweb/core';
 import css from 'css';
-
+import { CssUtils } from '@qualweb/util';
 import Technique from './Technique.object';
 
 const technique: CSSTechnique = {
@@ -43,9 +43,9 @@ const technique: CSSTechnique = {
     ],
     related: ['C12', 'C13', 'C14'],
     url: {
-      'C12': 'https://www.w3.org/TR/WCAG20-TECHS/C12.html',
-      'C13': 'https://www.w3.org/TR/WCAG20-TECHS/C13.html',
-      'C14': 'https://www.w3.org/TR/WCAG20-TECHS/C14.html'
+      'C12': 'https://www.w3.org/WAI/WCAG21/Techniques/css/C12',
+      'C13': 'https://www.w3.org/WAI/WCAG21/Techniques/css/C13',
+      'C14': 'https://www.w3.org/WAI/WCAG21/Techniques/css/C14'
     },
     passed: 0,
     warning: 0,
@@ -111,13 +111,14 @@ class QW_CSS_T1 extends Technique {
   private extractInfo(cssObject: any, declaration: any, fileName: string): void {
     const names = ['xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large', 'xsmaller', 'larger'];
 
-    if(declaration['value'].includes('px')){
-      super.fillEvaluation('warning', `Element 'font-size' style attribute uses 'px'`,
+    if(CssUtils.trimImportant(declaration['value']).includes('px')){
+      super.fillEvaluation('failed', `Element 'font-size' style attribute uses 'px'`,
         css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
         fileName, cssObject['selectors'].toString(), cssObject['position'],
         declaration['property'], declaration['value'], declaration['position'])
-
-    } else if(declaration['value'].endsWith('em') || declaration['value'].endsWith('%') || names.includes(declaration['value'].trim())){
+    } else if(CssUtils.trimImportant(declaration['value']).endsWith('em') || //C14 passed
+              CssUtils.trimImportant(declaration['value']).endsWith('%') || //C12 passed
+              names.includes(CssUtils.trimImportant(declaration['value']).trim())){// C13 passed
       super.fillEvaluation('passed', `Element 'font-size' style attribute doesn't use 'px'`,
         css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
         fileName, cssObject['selectors'].toString(), cssObject['position'],

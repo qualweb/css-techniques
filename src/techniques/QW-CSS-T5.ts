@@ -3,6 +3,7 @@
 import { CSSTechnique, CSSTechniqueResult } from '@qualweb/css-techniques';
 import { CSSStylesheet } from '@qualweb/core';
 import css from 'css';
+import { CssUtils } from '@qualweb/util';
 
 import Technique from './Technique.object';
 
@@ -91,7 +92,7 @@ class QW_CSS_T5 extends Technique {
 
   private extractInfo(cssObject: any, declaration: any, fileName: string): void {
     if(cssObject['selectors'] && this.selectorIsContainer(cssObject['selectors'])){
-      if(declaration['value'].endsWith('%')){
+      if(CssUtils.trimImportant(declaration['value']).endsWith('%')){
         super.fillEvaluation('warning', `Element 'width' style attribute uses '%'`,
         css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
         fileName, cssObject['selectors'].toString(), cssObject['position'],
