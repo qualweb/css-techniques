@@ -42,6 +42,11 @@ describe('Technique QW-CSS-T3', function () {
       it(`should have outcome="${test.outcome}"`, async function () {
         this.timeout(10 * 1000);
         const {stylesheets} = await getDom(browser,test.url);
+
+        configure({
+          techniques: ["QW-CSS-T3"]
+        });
+        
         const report = await executeCSST(stylesheets);
         expect(report.techniques['QW-CSS-T3'].metadata.outcome).to.be.equal(test.outcome);
       });

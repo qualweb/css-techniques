@@ -5,6 +5,8 @@ import { CSSStylesheet } from '@qualweb/core';
 import { techniques, techniquesToExecute } from './techniques';
 
 function configure(options: CSSTOptions): void {
+  resetConfiguration();
+  
   if (options.principles) {
     options.principles = options.principles.map(p => (p.charAt(0).toUpperCase() + p.toLowerCase().slice(1)).trim());
   }

@@ -36,9 +36,9 @@ describe('Technique QW-CSS-T2', function () {
         
         const {stylesheets} = await getDom(browser,test.url);
 
-        // configure({
-        //   techniques: ["QW-CSS-T2"]
-        // });
+        configure({
+          techniques: ["QW-CSS-T2"]
+        });
 
         const report = await executeCSST(stylesheets);
         expect(report.techniques['QW-CSS-T2'].metadata.outcome).to.be.equal(test.outcome);

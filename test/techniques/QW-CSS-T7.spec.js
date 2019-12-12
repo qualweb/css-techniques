@@ -51,6 +51,10 @@ describe('Technique QW-CSS-T7', function () {
         // const {stylesheets, mappedDOM} = await getDom(test.url);
         const {stylesheets, mappedDOM} = await getDom(browser,test.url);
 
+        configure({
+          techniques: ["QW-CSS-T7"]
+        });
+
         const report = await executeCSST(stylesheets, mappedDOM);
         expect(report.techniques['QW-CSS-T7'].metadata.outcome).to.be.equal(test.outcome);
       });
