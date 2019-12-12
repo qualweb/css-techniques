@@ -1,6 +1,6 @@
 {
   "name": "@qualweb/css-techniques",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Implementation of the WCAG 2.1 CSS techniques",
   "main": "dist/index.js",
   "scripts": {

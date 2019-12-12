@@ -24,13 +24,11 @@ const technique: CSSTechnique = {
         name: '1.4.8',
         level: 'AAA',
         principle: 'Perceivable',
-        url: 'https://www.w3.org/WAI/WCAG21/Techniques/css/C24'
+        url: 'https://www.w3.org/WAI/WCAG21/Understanding/visual-presentation'
       }
     ],
     related: ['C20'],
-    url: {
-      'C20': 'https://www.w3.org/WAI/WCAG21/Techniques/css/C20'
-    },
+    url: 'https://www.w3.org/WAI/WCAG21/Techniques/css/C24',
     passed: 0,
     warning: 0,
     failed: 0,

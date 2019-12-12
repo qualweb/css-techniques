@@ -33,13 +33,13 @@ function configure(options: CSSTOptions): void {
     }
     if (!options.principles && !options.levels) {
       if (options.techniques && options.techniques.length !== 0) {
-        if (!options.techniques.includes(technique) && !options.techniques.includes(technique[technique].getTechniqueMapping())) {
+        if (!options.techniques.includes(technique) && !options.techniques.includes(techniques[technique].getTechniqueMapping())) {
           techniquesToExecute[technique] = false;
         }
       }
     } else {
       if (options.techniques && options.techniques.length !== 0) {
-        if (options.techniques.includes(technique) || options.techniques.includes(technique[technique].getTechniqueMapping())) {
+        if (options.techniques.includes(technique) || options.techniques.includes(techniques[technique].getTechniqueMapping())) {
           techniquesToExecute[technique] = true;
         }
       }
