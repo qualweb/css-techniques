@@ -10,51 +10,51 @@ const { getDom } = require('../getDom');
 describe('Technique QW-CSS-T4', function () {
   const tests = [
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/C22/t1.html',
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T4/t1.html',
       outcome: 'passed'
     },
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/C22/t2.html',
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T4/t2.html',
       outcome: 'passed'
     },
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/C22/t3.html',
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T4/t3.html',
       outcome: 'passed'
     },
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/C22/t4.html',
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T4/t4.html',
       outcome: 'passed'
     },
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/C22/t5.html',
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T4/t5.html',
       outcome: 'passed'
     },
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/C22/t6.html',
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T4/t6.html',
       outcome: 'passed'
     },
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/C22/t7.html',
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T4/t7.html',
       outcome: 'passed'
     },
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/C22/t8.html',
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T4/t8.html',
       outcome: 'passed'
     },
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/C22/t9.html',
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T4/t9.html',
       outcome: 'passed'
     },
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/C22/t10.html',
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T4/t10.html',
       outcome: 'passed'
     },
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/C22/t11.html',
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T4/t11.html',
       outcome: 'passed'
     },
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/C22/t12.html',
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T4/t12.html',
       outcome: 'passed'
     }
   ];
