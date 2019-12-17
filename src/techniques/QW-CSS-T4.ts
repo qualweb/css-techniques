@@ -7,14 +7,14 @@ import css from 'css';
 import Technique from './Technique.object';
 
 const technique: CSSTechnique = {
-  name: 'Using "percent, em, names" for font sizes',
+  name: 'Using CSS to control visual presentation of text',
   code: 'QW-CSS-T4',
   mapping: 'C22',
   description: 'The objective of this technique is to demonstrate how CSS can be used to control the visual presentation of text. This will allow users to modify, via the user agent, the visual characteristics of the text to meet their requirement. The text characteristics include aspects such as size, color, font family and relative placement.',
   metadata: {
     target: {
       element: '*',
-      attributes: 'font-size'
+      attributes: 'font-family text-align font-size font-style font-weight color line-height text-transform letter-spacing background-image first-line :first-letter :before :after'
     },
     'success-criteria': [{
         name: '1.3.1',
@@ -68,9 +68,7 @@ class QW_CSS_T4 extends Technique {
   async execute(styleSheets: CSSStylesheet[]): Promise<void> {
     for (const styleSheet of styleSheets) {
       if(styleSheet.content && styleSheet.content.plain){
-        if (styleSheet.content.plain.includes("font-size")){
           this.analyseAST(styleSheet.content.parsed, styleSheet.file);
-        }
       }
     }
   }
@@ -95,9 +93,8 @@ class QW_CSS_T4 extends Technique {
       }
     }
   }
-  
+
   loopDeclarations(cssObject: any, fileName: string): void {
-  
     let declarations = cssObject['declarations'];
     if(declarations){
       for (const declaration of declarations) {
@@ -107,18 +104,18 @@ class QW_CSS_T4 extends Technique {
       }
     }
   }
-  
+
   extractInfo(cssObject: any, declaration: any, fileName: string): void {
     const names = ['font-family', 'text-align', 'font-size',
     'font-style', 'font-weight', 'color', 'line-height', 'text-transform', 'letter-spacing',
     'background-image', 'first-line', ':first-letter', ':before', ':after'];
-  
+
     if(names.includes(declaration['property'])){
       super.fillEvaluation('passed', `Element uses CSS properties were used to control the visual presentation of text`,
         css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
         fileName, cssObject['selectors'].toString(), cssObject['position'],
         declaration['property'], declaration['value'], declaration['position'])
-  
+
     } else {
       super.fillEvaluation('inapplicable', `Element doesn't uses CSS properties were used to control the visual presentation of text`)
     }
