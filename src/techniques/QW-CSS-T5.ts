@@ -14,7 +14,7 @@ const technique: CSSTechnique = {
   description: 'The objective of this technique is to enable users to increase the size of text without having to scroll horizontally to read that text. To use this technique, an author specifies the width of text containers using percent values.',
   metadata: {
     target: {
-      element: '*',
+      element: 'span article section nav aside hgroup header footer address p hr blockquote div h1 h2 h3 h4 h5 h6 li ul ol dd dt dl figcaption',
       attributes: 'width'
     },
     'success-criteria': [
@@ -102,7 +102,6 @@ class QW_CSS_T5 extends Technique {
   }
 
   private selectorIsContainer(selectors: Array<string>): boolean{
-
     for(const selector of selectors){
       let splitSelector = selector.split(" ");
       for (const selector2 of splitSelector){
