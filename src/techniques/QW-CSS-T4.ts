@@ -66,9 +66,9 @@ class QW_CSS_T4 extends Technique {
     super(technique);
   }
   async execute(styleSheets: CSSStylesheet[]): Promise<void> {
-    for (const styleSheet of styleSheets) {
+    for (const styleSheet of styleSheets || []) {
       if(styleSheet.content && styleSheet.content.plain){
-        if (styleSheet.content.plain.includes("font-size")){
+        if (styleSheet.content.plain.includes('font-size')){
           this.analyseAST(styleSheet.content.parsed, styleSheet.file);
         }
       }
@@ -85,11 +85,11 @@ class QW_CSS_T4 extends Technique {
       this.loopDeclarations(cssObject, fileName)
     } else {
       if (cssObject['type'] === 'stylesheet') {
-        for (const key of cssObject['stylesheet']['rules']) {
+        for (const key of cssObject['stylesheet']['rules'] || []) {
           this.analyseAST(key, fileName);
         }
       } else {
-        for (const key of cssObject['rules']) {
+        for (const key of cssObject['rules'] || []) {
           this.analyseAST(key, fileName);
         }
       }
@@ -100,7 +100,7 @@ class QW_CSS_T4 extends Technique {
   
     let declarations = cssObject['declarations'];
     if(declarations){
-      for (const declaration of declarations) {
+      for (const declaration of declarations || []) {
         if (declaration['property'] && declaration['value'] ) {
             this.extractInfo(cssObject, declaration, fileName);
         }
@@ -116,7 +116,7 @@ class QW_CSS_T4 extends Technique {
     if(names.includes(declaration['property'])){
       super.fillEvaluation('passed', `Element uses CSS properties were used to control the visual presentation of text`,
         css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
-        fileName, cssObject['selectors'].toString(), cssObject['position'],
+        fileName, cssObject['selectors'] ? cssObject['selectors'].toString() : '', cssObject['position'],
         declaration['property'], declaration['value'], declaration['position'])
   
     } else {
