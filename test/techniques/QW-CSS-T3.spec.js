@@ -1,6 +1,5 @@
 const {
-  configure,
-  executeCSST
+  CSSTechniques
 } = require('../../dist/index');
 const {expect} = require('chai');
 
@@ -43,11 +42,11 @@ describe('Technique QW-CSS-T3', function () {
         this.timeout(10 * 1000);
         const {stylesheets} = await getDom(browser,test.url);
 
-        configure({
+        const cssTechniques = new CSSTechniques({
           techniques: ["QW-CSS-T3"]
         });
-        
-        const report = await executeCSST(stylesheets);
+
+        const report = await cssTechniques.execute(stylesheets);
         expect(report.techniques['QW-CSS-T3'].metadata.outcome).to.be.equal(test.outcome);
       });
     });

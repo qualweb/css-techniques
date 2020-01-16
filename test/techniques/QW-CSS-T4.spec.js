@@ -6,52 +6,56 @@ const {expect} = require('chai');
 const puppeteer = require('puppeteer');
 const { getDom } = require('../getDom');
 
-describe('Technique QW-CSS-T1', function () {
+describe('Technique QW-CSS-T4', function () {
   const tests = [
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/em.html',
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T4/t1.html',
       outcome: 'passed'
     },
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/emImportant.html',
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T4/t2.html',
       outcome: 'passed'
     },
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/emOnlyPElement.html',
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T4/t3.html',
       outcome: 'passed'
     },
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/percentage.html',
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T4/t4.html',
       outcome: 'passed'
     },
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/larger.html',
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T4/t5.html',
       outcome: 'passed'
     },
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/px.html',
-      outcome: 'failed'
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T4/t6.html',
+      outcome: 'passed'
     },
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/pxImportant.html',
-      outcome: 'failed'
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T4/t7.html',
+      outcome: 'passed'
     },
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/initial.html',
-      outcome: 'inapplicable'
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T4/t8.html',
+      outcome: 'passed'
     },
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/pt.html',
-      outcome: 'inapplicable'
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T4/t9.html',
+      outcome: 'passed'
     },
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/zero.html',
-      outcome: 'inapplicable'
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T4/t10.html',
+      outcome: 'passed'
     },
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/larg.html',
-      outcome: 'inapplicable'
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T4/t11.html',
+      outcome: 'passed'
     },
+    {
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T4/t12.html',
+      outcome: 'passed'
+    }
   ];
   let browser;
   it("pup open", async function () {
@@ -71,11 +75,11 @@ describe('Technique QW-CSS-T1', function () {
         const {stylesheets} = await getDom(browser,test.url);
 
         const cssTechniques = new CSSTechniques({
-          techniques: ["QW-CSS-T1"]
+          techniques: ["QW-CSS-T4"]
         });
 
         const report = await cssTechniques.execute(stylesheets);
-        expect(report.techniques['QW-CSS-T1'].metadata.outcome).to.be.equal(test.outcome);
+        expect(report.techniques['QW-CSS-T4'].metadata.outcome).to.be.equal(test.outcome);
       });
     });
   }

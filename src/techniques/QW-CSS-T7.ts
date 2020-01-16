@@ -1,65 +1,52 @@
 'use strict';
 
-import {
-  CSSTechnique,
-  CSSTechniqueResult
-} from '@qualweb/css-techniques';
-import {
-  CSSStylesheet
-} from '@qualweb/core';
-// import {
-//   DomUtils
-// } from "@qualweb/util";
-
-// import css from 'css';
-
+import { CSSTechniqueResult } from '@qualweb/css-techniques';
+import { CSSStylesheet } from '@qualweb/core';
 import Technique from './Technique.object';
-
-const technique: CSSTechnique = {
-  name: 'Failure of Success Criterion 1.4.3, 1.4.6 and 1.4.8 due to specifying foreground colors without specifying background colors or vice versa',
-  code: 'QW-CSS-T7',
-  mapping: 'F24',
-  description: 'Users with vision loss or cognitive, language and learning challenges often prefer specific foreground and background color combinations. In some cases, individuals with low vision will find it much easier to see a Web page that has white text on a black background, and they may have set their user agent to present this contrast. Many user agents make it possible for users to choose a preference about the foreground or background colors they would like to see without overriding all author-specified styles. This makes it possible for users to view pages where colors have not been specified by the author in their preferred color combination.',
-  metadata: {
-    target: {
-      element: '*',
-      attributes: 'text-decoration'
-    },
-    'success-criteria': [{
-        name: '1.4.3',
-        level: 'AA',
-        principle: 'Perceivable',
-        url: 'https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum'
-      },
-      {
-        name: '1.4.6',
-        level: 'AAA',
-        principle: 'Perceivable',
-        url: 'https://www.w3.org/WAI/WCAG21/Understanding/contrast-enhanced'
-      },
-      {
-        name: '1.4.8',
-        level: 'AAA',
-        principle: 'Perceivable',
-        url: 'https://www.w3.org/WAI/WCAG21/Understanding/visual-presentation'
-      }
-    ],
-    related: ['C23', 'C25'],
-    url: 'https://www.w3.org/WAI/WCAG21/Techniques/failures/F24',
-    passed: 0,
-    warning: 0,
-    failed: 0,
-    inapplicable: 0,
-    outcome: '',
-    description: ''
-  },
-  results: new Array < CSSTechniqueResult > ()
-};
 
 class QW_CSS_T7 extends Technique {
 
   constructor() {
-    super(technique);
+    super({
+      name: 'Failure of Success Criterion 1.4.3, 1.4.6 and 1.4.8 due to specifying foreground colors without specifying background colors or vice versa',
+      code: 'QW-CSS-T7',
+      mapping: 'F24',
+      description: 'Users with vision loss or cognitive, language and learning challenges often prefer specific foreground and background color combinations. In some cases, individuals with low vision will find it much easier to see a Web page that has white text on a black background, and they may have set their user agent to present this contrast. Many user agents make it possible for users to choose a preference about the foreground or background colors they would like to see without overriding all author-specified styles. This makes it possible for users to view pages where colors have not been specified by the author in their preferred color combination.',
+      metadata: {
+        target: {
+          element: '*',
+          attributes: 'text-decoration'
+        },
+        'success-criteria': [{
+            name: '1.4.3',
+            level: 'AA',
+            principle: 'Perceivable',
+            url: 'https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum'
+          },
+          {
+            name: '1.4.6',
+            level: 'AAA',
+            principle: 'Perceivable',
+            url: 'https://www.w3.org/WAI/WCAG21/Understanding/contrast-enhanced'
+          },
+          {
+            name: '1.4.8',
+            level: 'AAA',
+            principle: 'Perceivable',
+            url: 'https://www.w3.org/WAI/WCAG21/Understanding/visual-presentation'
+          }
+        ],
+        related: ['C23', 'C25'],
+        url: 'https://www.w3.org/WAI/WCAG21/Techniques/failures/F24',
+        passed: 0,
+        warning: 0,
+        failed: 0,
+        inapplicable: 0,
+        outcome: '',
+        description: ''
+      },
+      results: new Array < CSSTechniqueResult > ()
+    });
   }
 
   async execute(styleSheets: CSSStylesheet[], mappedDOM: any): Promise < void > {

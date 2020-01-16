@@ -1,7 +1,7 @@
 'use strict';
 
-import clone from 'lodash/clone';
-import cloneDeep from 'lodash/cloneDeep';
+import clone from 'lodash.clone';
+import cloneDeep from 'lodash.clonedeep';
 import { CSSTechnique, CSSTechniqueResult } from '@qualweb/css-techniques';
 import { CSSStylesheet } from '@qualweb/core';
 import css from 'css';

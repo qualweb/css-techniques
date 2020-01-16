@@ -6,15 +6,15 @@ const {expect} = require('chai');
 const puppeteer = require('puppeteer');
 const { getDom } = require('../getDom');
 
-describe('Technique QW-CSS-T2', function () {
+describe('Technique QW-CSS-T5', function () {
   const tests = [
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~aestriga/testeCSS-T2/teste1.html',
-      outcome: 'failed'
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T5/t1.html',
+      outcome: 'warning'
     },
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~aestriga/testeCSS-T2/teste2.html',
-      outcome: 'passed'
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T5/t2.html',
+      outcome: 'failed'
     }
   ];
   let browser;
@@ -32,15 +32,14 @@ describe('Technique QW-CSS-T2', function () {
     describe(`${test.outcome.charAt(0).toUpperCase() + test.outcome.slice(1)} example ${i}`, function () {
       it(`should have outcome="${test.outcome}"`, async function () {
         this.timeout(10 * 1000);
-        
         const {stylesheets} = await getDom(browser,test.url);
 
         const cssTechniques = new CSSTechniques({
-          techniques: ["QW-CSS-T2"]
+          techniques: ["QW-CSS-T5"]
         });
 
         const report = await cssTechniques.execute(stylesheets);
-        expect(report.techniques['QW-CSS-T2'].metadata.outcome).to.be.equal(test.outcome);
+        expect(report.techniques['QW-CSS-T5'].metadata.outcome).to.be.equal(test.outcome);
       });
     });
   }

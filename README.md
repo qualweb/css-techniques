@@ -22,7 +22,7 @@
   const htmlparser2 = require('htmlparser2');
   const request = require('request');
   const stew = new (require('stew-select')).Stew();
-  const { executeCSST } = require('@qualweb/css-techniques');
+  const { CSSTechniques } = require('@qualweb/css-techniques');
 
   const DEFAULT_DESKTOP_USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:22.0) Gecko/20100101 Firefox/22.0';
   const DEFAULT_MOBILE_USER_AGENT = 'Mozilla/5.0 (Linux; U; Android 2.2; en-us; DROID2 GLOBAL Build/S273) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1';
@@ -203,8 +203,10 @@
     }
 
     await mapCSSElements(sourceHtml.html.parsed, stylesheets, mappedDOM);
+    
+    const cssTechniques = new CSSTechniques();
 
-    const report = await executeCSST(stylesheets, mappedDOM);
+    const report = await cssTechniques.execute(stylesheets, mappedDOM);
 
     console.log(report);
   })();

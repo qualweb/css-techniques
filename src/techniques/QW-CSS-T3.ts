@@ -1,45 +1,43 @@
 'use strict';
 
-import { CSSTechnique, CSSTechniqueResult } from '@qualweb/css-techniques';
+import { CSSTechniqueResult } from '@qualweb/css-techniques';
 import { CSSStylesheet } from '@qualweb/core';
 import css from 'css';
 import { CssUtils } from '@qualweb/util';
 import Technique from './Technique.object';
 
-const technique: CSSTechnique = {
-  name: 'Specifying line spacing in CSS',
-  code: 'QW-CSS-T3',
-  mapping: 'C21',
-  description: 'Many people with cognitive disabilities have trouble tracking lines of text when a block of text is single spaced. Providing spacing between 1.5 to 2 allows them to start a new line more easily once they have finished the previous one.',
-  metadata: {
-    target: {
-      element: '*',
-      attributes: 'line-height'
-    },
-    'success-criteria': [
-      {
-        name: '1.4.8',
-        level: 'AAA',
-        principle: 'Perceivable',
-        url: 'https://www.w3.org/WAI/WCAG21/Understanding/visual-presentation.html'
-      }
-    ],
-    related: [],
-    url: 'https://www.w3.org/WAI/WCAG21/Techniques/css/C21',
-    passed: 0,
-    warning: 0,
-    failed: 0,
-    inapplicable: 0,
-    outcome: '',
-    description: ''
-  },
-  results: new Array<CSSTechniqueResult>()
-};
-
 class QW_CSS_T3 extends Technique {
 
   constructor() {
-    super(technique);
+    super({
+      name: 'Specifying line spacing in CSS',
+      code: 'QW-CSS-T3',
+      mapping: 'C21',
+      description: 'Many people with cognitive disabilities have trouble tracking lines of text when a block of text is single spaced. Providing spacing between 1.5 to 2 allows them to start a new line more easily once they have finished the previous one.',
+      metadata: {
+        target: {
+          element: '*',
+          attributes: 'line-height'
+        },
+        'success-criteria': [
+          {
+            name: '1.4.8',
+            level: 'AAA',
+            principle: 'Perceivable',
+            url: 'https://www.w3.org/WAI/WCAG21/Understanding/visual-presentation.html'
+          }
+        ],
+        related: [],
+        url: 'https://www.w3.org/WAI/WCAG21/Techniques/css/C21',
+        passed: 0,
+        warning: 0,
+        failed: 0,
+        inapplicable: 0,
+        outcome: '',
+        description: ''
+      },
+      results: new Array<CSSTechniqueResult>()
+    });
   }
 
   async execute(styleSheets: CSSStylesheet[]): Promise<void> {

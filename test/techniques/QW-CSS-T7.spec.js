@@ -1,6 +1,5 @@
 const {
-  configure,
-  executeCSST
+  CSSTechniques
 } = require('../../dist/index');
 const {expect} = require('chai');
 const puppeteer = require('puppeteer');
@@ -51,11 +50,11 @@ describe('Technique QW-CSS-T7', function () {
         // const {stylesheets, mappedDOM} = await getDom(test.url);
         const {stylesheets, mappedDOM} = await getDom(browser,test.url);
 
-        configure({
+        const cssTechniques = new CSSTechniques({
           techniques: ["QW-CSS-T7"]
         });
 
-        const report = await executeCSST(stylesheets, mappedDOM);
+        const report = await cssTechniques.execute(stylesheets);
         expect(report.techniques['QW-CSS-T7'].metadata.outcome).to.be.equal(test.outcome);
       });
     });
