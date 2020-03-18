@@ -95,10 +95,14 @@ class CSSTechniques {
   }
 
   private async executeTechnique(report: CSSTechniquesReport, technique: string, styleSheets: CSSStylesheet[], mappedDOM: any): Promise<void> {
-    await this.techniques[technique].execute(styleSheets, mappedDOM);
-    report.techniques[technique] = this.techniques[technique].getFinalResults();
-    report.metadata[report.techniques[technique].metadata.outcome]++;
-    this.techniques[technique].reset();
+    try {
+      await this.techniques[technique].execute(styleSheets, mappedDOM);
+      report.techniques[technique] = this.techniques[technique].getFinalResults();
+      report.metadata[report.techniques[technique].metadata.outcome]++;
+      this.techniques[technique].reset();
+    } catch(err) {
+      console.error(err);
+    }
   }
 
   private async executeTechniques(report: CSSTechniquesReport, styleSheets: CSSStylesheet[], mappedDOM: any): Promise<void> {
