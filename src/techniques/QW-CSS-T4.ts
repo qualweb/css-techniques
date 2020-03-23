@@ -41,23 +41,15 @@ class QW_CSS_T4 extends Technique {
             url: "https://www.w3.org/WAI/WCAG21/Understanding/images-of-text"
           },
           {
-            name: "1.4.9	",
+            name: "1.4.9",
             level: "AAA",
             principle: "Perceivable",
             url:
               "https://www.w3.org/WAI/WCAG21/Understanding/images-of-text-no-exception"
           }
         ],
-        related: [],
-        url: {
-          C8: "https://www.w3.org/WAI/WCAG21/Techniques/css/C8",
-          C12: "https://www.w3.org/WAI/WCAG21/Techniques/css/C12",
-          C13: "https://www.w3.org/WAI/WCAG21/Techniques/css/C13",
-          C14: "https://www.w3.org/WAI/WCAG21/Techniques/css/C14",
-          C21: "https://www.w3.org/WAI/WCAG21/Techniques/css/C21",
-          SCR34:
-            "https://www.w3.org/WAI/WCAG21/Techniques/client-side-script/SCR34"
-        },
+        related: ['C8','C12','C13','C14','SCR34'],
+        url: 'https://www.w3.org/WAI/WCAG21/Techniques/css/C22',
         passed: 0,
         warning: 0,
         failed: 0,
