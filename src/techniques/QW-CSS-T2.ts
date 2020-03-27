@@ -98,7 +98,19 @@ class QW_CSS_T2 extends Technique {
         fileName, cssObject['selectors'].toString(), cssObject['position'],
         declaration['property'], declaration['value'], declaration['position']);
 
-    } else {
+    }else if(declaration['value'].includes('justify')){
+      super.fillEvaluation('failed', `Text block is justified.`,
+        css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
+        fileName, cssObject['selectors'].toString(), cssObject['position'],
+        declaration['property'], declaration['value'], declaration['position']);
+
+    }else if(declaration['value'].includes('center')){
+      super.fillEvaluation('failed', `Text block is centered.`,
+        css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
+        fileName, cssObject['selectors'].toString(), cssObject['position'],
+        declaration['property'], declaration['value'], declaration['position']);
+
+    }else{
       super.fillEvaluation('failed', `Text block is aligned neither left nor right.`,
         css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
         fileName, cssObject['selectors'].toString(), cssObject['position'],
