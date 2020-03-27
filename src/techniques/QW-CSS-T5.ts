@@ -9,7 +9,8 @@ import Technique from './Technique.object';
 
 class QW_CSS_T5 extends Technique {
 
-  containers = ['span', 'article', 'section', 'nav', 'aside', 'hgroup', 'header', 'footer', 'address', 'p', 'hr', 'blockquote', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'ul', 'ol', 'dd', 'dt', 'dl', 'figcaption']
+  containers = ['span', 'article', 'section', 'nav', 'aside', 'hgroup', 'header', 'footer', 'address', 'p', 'hr', 'blockquote', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'ul', 'ol', 'dd', 'dt', 'dl', 'figcaption'];
+  relativeLengths = ['em', 'ex', 'ch', 'rem', 'vw', 'vh', 'vmin', 'vmax', '%'];
 
   constructor() {
     super({
@@ -88,15 +89,17 @@ class QW_CSS_T5 extends Technique {
 
   private extractInfo(cssObject: any, declaration: any, fileName: string): void {
     if(cssObject['selectors'] && this.selectorIsContainer(cssObject['selectors'])){
-      if(CssUtils.trimImportant(declaration['value']).endsWith('%')){
-        super.fillEvaluation('warning', `Element 'width' style attribute uses '%'`,
-        css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
-        fileName, cssObject['selectors'].toString(), cssObject['position'],
-        declaration['property'], declaration['value'], declaration['position'])
-      }else {
-        super.fillEvaluation('failed', `Element 'width' style attribute doesn't use '%'`)
+      for(let unit of this.relativeLengths){
+        if(CssUtils.trimImportant(declaration['value']).endsWith(unit)){
+          super.fillEvaluation('warning', `Element 'width' style attribute uses ` + unit,
+          css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
+          fileName, cssObject['selectors'].toString(), cssObject['position'],
+          declaration['property'], declaration['value'], declaration['position'])
+          return;
+        }
       }
-    } 
+      super.fillEvaluation('failed', `Element 'width' style attribute doesn't use a relative length`)
+    }
   }
 
   private selectorIsContainer(selectors: Array<string>): boolean{
