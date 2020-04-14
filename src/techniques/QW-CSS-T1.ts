@@ -38,7 +38,7 @@ class QW_CSS_T1 extends Technique {
             url: 'https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-visual-presentation.html'
           },
           {
-            name: '1.4.9	',
+            name: '1.4.9',
             level: 'AAA',
             principle: 'Perceivable',
             url: 'https://www.w3.org/WAI/GL/UNDERSTANDING-WCAG20/visual-audio-contrast-text-images.html'
