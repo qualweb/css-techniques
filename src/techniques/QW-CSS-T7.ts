@@ -65,9 +65,9 @@ class QW_CSS_T7 extends Technique {
               if(this.getStyle(parent, "background-color") || this.getStyle(parent, "bgcolor")){
                 super.fillEvaluation('passed', `Element has color and background-color set`);
                 hasBGColor = true;
-                backgroundChecked[parent['_stew_node_id']] = true;
+                backgroundChecked[parent['_node_id']] = true;
               }
-              parent = this.getParent(mappedDOM, parent['_stew_node_id']);
+              parent = this.getParent(mappedDOM, parent['_node_id']);
             }
             if(!hasBGColor)
               if(mappedDOM[key]['attribs']['css'])
@@ -133,7 +133,7 @@ class QW_CSS_T7 extends Technique {
   private getParent(mappedDOM:any, myID: string): Object | undefined{
 
     if(mappedDOM[myID]['parent']){
-      let parentID = mappedDOM[myID]['parent']['_stew_node_id'];
+      let parentID = mappedDOM[myID]['parent']['_node_id'];
       if(mappedDOM.hasOwnProperty(parentID))
         return mappedDOM[parentID];
     }

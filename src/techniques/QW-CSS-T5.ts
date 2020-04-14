@@ -89,22 +89,23 @@ class QW_CSS_T5 extends Technique {
   private extractInfo(cssObject: any, declaration: any, fileName: string): void {
     if(cssObject['selectors'] && this.selectorIsContainer(cssObject['selectors'])){
       if(CssUtils.trimImportant(declaration['value']).endsWith('%')){
-        super.fillEvaluation('warning', `Element 'width' style attribute uses '%'`,
+        super.fillEvaluation('warning', `Property 'width' style attribute uses '%'`,
         css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
         fileName, cssObject['selectors'].toString(), cssObject['position'],
         declaration['property'], declaration['value'], declaration['position'])
-      }else {
-        super.fillEvaluation('failed', `Element 'width' style attribute doesn't use '%'`)
+      } else {
+        super.fillEvaluation('failed', `Property 'width' style attribute doesn't use '%'.`)
       }
     } 
   }
 
   private selectorIsContainer(selectors: Array<string>): boolean{
-    for(const selector of selectors){
-      let splitSelector = selector.split(" ");
-      for (const selector2 of splitSelector){
-        if(this.containers.includes(selector2))
+    for(const selector of selectors || []){
+      const splitSelector = selector.split(' ');
+      for (const selector2 of splitSelector) {
+        if(this.containers.includes(selector2)) {
           return true;
+        }
       }
     }
     return false
