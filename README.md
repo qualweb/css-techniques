@@ -8,7 +8,7 @@ Implementation of the [WCAG 2.1 CSS techniques](https://www.w3.org/WAI/WCAG21/Te
 
 ## Implemented techniques
 
-| QualWeb Rule ID | WCAG Technique ID | WCAG Technique Name |
+| QualWeb Technique ID | WCAG Technique ID | WCAG Technique Name |
 |---|---|---|
 | QW-CSS-T1 | [C12](https://www.w3.org/WAI/WCAG21/Techniques/css/C12) [C13](https://www.w3.org/WAI/WCAG21/Techniques/css/C13) [C14](https://www.w3.org/WAI/WCAG21/Techniques/css/C14) | Using "percent, em, names" for font sizes |
 | QW-CSS-T2 | [C19](https://www.w3.org/WAI/WCAG21/Techniques/css/C19) | Specifying alignment either to the left or right in CSS |
