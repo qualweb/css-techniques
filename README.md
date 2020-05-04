@@ -6,7 +6,7 @@ Implementation of the [WCAG 2.1 CSS techniques](https://www.w3.org/WAI/WCAG21/Te
 
 **This is an internal module of QualWeb. To use it check either [@qualweb/cli](https://github.com/qualweb/cli) or [@qualweb/core](https://github.com/qualweb/core).**
 
-## Implemented rules
+## Implemented techniques
 
 | QualWeb Rule ID | WCAG Technique ID | WCAG Technique Name |
 |---|---|---|
