@@ -54,13 +54,13 @@ describe("Technique QW-CSS-T7", function() {
         this.timeout(10 * 1000);
         // const {stylesheets, mappedDOM} = await getDom(test.url);
         const { stylesheets, mappedDOM } = await getDom(browser, test.url);
-
+        
         const cssTechniques = new CSSTechniques({
           techniques: ["QW-CSS-T7"]
         });
 
         const report = await cssTechniques.execute(stylesheets, mappedDOM);
-        expect(report.techniques["QW-CSS-T7"].metadata.outcome).to.be.equal(
+        expect(report.assertions["QW-CSS-T7"].metadata.outcome).to.be.equal(
           test.outcome
         );
       });

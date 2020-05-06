@@ -32,16 +32,20 @@ async function getDom(browser,url) {
     }
 
     const stylesheets = await parseStylesheets(plainStylesheets);
-
     const mappedDOM = {};
-    const cookedStew = await CSSselect('*', sourceHtml.html.parsed);
-    if (cookedStew.length > 0)
-        for (const item of cookedStew || [])
-            mappedDOM[item['_node_id']] = item;
+    const cookedStew = CSSselect('*', sourceHtml.html.parsed);
 
+    if (cookedStew.length > 0) {
+        for (const item of cookedStew || []) {
+            if (item['startIndex']) {
+                mappedDOM[item['startIndex']] = item;
+            }
+        }
+    }
+    
     await mapCSSElements(sourceHtml.html.parsed, stylesheets, mappedDOM);
 
-    return { sourceHtml, page, stylesheets };
+    return { sourceHtml, page, stylesheets, mappedDOM };
 }
 
 async function parseStylesheets(plainStylesheets) {
@@ -122,7 +126,7 @@ function parseHTML(html) {
         else {
             parsed = dom;
         }
-    });
+    }, { withStartIndices: true, withEndIndices: true });
     const parser = new htmlparser2.Parser(handler);
     parser.write(html.replace(/(\r\n|\n|\r|\t)/gm, ''));
     parser.end();
@@ -164,38 +168,43 @@ function analyseAST(dom, cssObject, parentType, mappedDOM) {
   }
 }
 function loopDeclarations(dom, cssObject, parentType, mappedDOM) {
-  let declarations = cssObject['declarations'];
-  if (declarations && cssObject['selectors'] && !cssObject['selectors'].toString().includes('@-ms-viewport') && !(cssObject['selectors'].toString() === ":focus")) {
+    const declarations = cssObject['declarations'];
+    if (declarations && cssObject['selectors'] && !cssObject['selectors'].toString().includes('@-ms-viewport') && !(cssObject['selectors'].toString() === ':focus')) {
       try {
-          let stewResult = CSSselect(cssObject['selectors'].toString(), dom);
-          if (stewResult.length > 0) {
-              for (const item of stewResult || []) {
-                  for (const declaration of declarations || []) {
-                      if (declaration['property'] && declaration['value']) {
-                          if (!item['attribs'])
-                              item['attribs']={}
-                          if (!item['attribs']['css'])
-                              item['attribs']['css'] = {};
-                          if (item['attribs']['css'][declaration['property']] && item['attribs']['css'][declaration['property']]['value'] &&
-                              item['attribs']['css'][declaration['property']]['value'].includes("!important")) {
-                              continue;
-                          }
-                          else {
-                              item['attribs']['css'][declaration['property']] = {};
-                              if (parentType) {
-                                  item['attribs']['css'][declaration['property']]['media'] = parentType;
-                              }
-                              item['attribs']['css'][declaration['property']]['value'] = declaration['value'];
-                          }
-                          mappedDOM[item['_node_id']] = item;
-                      }
+        let stewResult = CSSselect(cssObject['selectors'].toString(), dom);
+        if (stewResult.length > 0) {
+          for (const item of stewResult || []) {
+            if (item['startIndex']) {
+              for (const declaration of declarations || []) {
+                if (declaration['property'] && declaration['value']) {
+                  if (!item['attribs']) {
+                    item['attribs'] = {};
                   }
+                  if (!item['attribs']['css']) {
+                    item['attribs']['css'] = {};
+                  }
+                  if (item['attribs']['css'][declaration['property']] && item['attribs']['css'][declaration['property']]['value'] &&
+                    item['attribs']['css'][declaration['property']]['value'].includes('!important')) {
+                    continue;
+                  }
+                  else {
+                    item['attribs']['css'][declaration['property']] = {};
+                    if (parentType) {
+                      item['attribs']['css'][declaration['property']]['media'] = parentType;
+                    }
+                    item['attribs']['css'][declaration['property']]['value'] = declaration['value'];
+                  }
+                  mappedDOM[item['startIndex']] = item;
+                }
               }
+            }
           }
+        }
       }
       catch (err) {
+        
       }
-  }
+    }
 }
 
 module.exports.getDom = getDom;

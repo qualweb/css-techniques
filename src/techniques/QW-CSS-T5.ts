@@ -1,47 +1,19 @@
 'use strict';
 
-import { CSSTechniqueResult } from '@qualweb/css-techniques';
 import { CSSStylesheet } from '@qualweb/core';
 import css from 'css';
 import { CssUtils } from '@qualweb/util';
+import Technique from '../lib/Technique.object';
+import { CSSTechnique } from '../lib/decorator';
 
-import Technique from './Technique.object';
-
+@CSSTechnique
 class QW_CSS_T5 extends Technique {
 
   containers = ['span', 'article', 'section', 'nav', 'aside', 'hgroup', 'header', 'footer', 'address', 'p', 'hr', 'blockquote', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'ul', 'ol', 'dd', 'dt', 'dl', 'figcaption'];
   relativeLengths = ['em', 'ex', 'ch', 'rem', 'vw', 'vh', 'vmin', 'vmax', '%'];
 
-  constructor() {
-    super({
-      name: 'Using percentage values in CSS for container sizes',
-      code: 'QW-CSS-T5',
-      mapping: 'C24',
-      description: 'The objective of this technique is to enable users to increase the size of text without having to scroll horizontally to read that text. To use this technique, an author specifies the width of text containers using percent values.',
-      metadata: {
-        target: {
-          element: 'span article section nav aside hgroup header footer address p hr blockquote div h1 h2 h3 h4 h5 h6 li ul ol dd dt dl figcaption',
-          attributes: 'width'
-        },
-        'success-criteria': [
-          {
-            name: '1.4.8',
-            level: 'AAA',
-            principle: 'Perceivable',
-            url: 'https://www.w3.org/WAI/WCAG21/Understanding/visual-presentation'
-          }
-        ],
-        related: ['C20'],
-        url: 'https://www.w3.org/WAI/WCAG21/Techniques/css/C24',
-        passed: 0,
-        warning: 0,
-        failed: 0,
-        inapplicable: 0,
-        outcome: '',
-        description: ''
-      },
-      results: new Array<CSSTechniqueResult>()
-    });
+  constructor(technique?: any) {
+    super(technique);
   }
 
   async execute(styleSheets: CSSStylesheet[]): Promise<void> {

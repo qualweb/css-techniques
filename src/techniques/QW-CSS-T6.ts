@@ -1,42 +1,15 @@
 'use strict';
 
-import { CSSTechniqueResult } from '@qualweb/css-techniques';
 import { CSSStylesheet } from '@qualweb/core';
 import css from 'css';
+import Technique from '../lib/Technique.object';
+import { CSSTechnique } from '../lib/decorator';
 
-import Technique from './Technique.object';
-
+@CSSTechnique
 class QW_CSS_T6 extends Technique {
 
-  constructor() {
-    super({
-      name: 'Failure of Success Criterion 2.2.2 due to using text-decoration:blink without a mechanism to stop it in less than five seconds',
-      code: 'QW-CSS-T6',
-      mapping: 'F4',
-      description: 'CSS defines the blink value for the text-decoration property. When used, it causes any text in elements with this property to blink at a predetermined rate. This cannot be interrupted by the user, nor can it be disabled as a user agent preference. The blinking continues as long as the page is displayed. Therefore, content that uses text-decoration:blink fails the Success Criterion because blinking can continue for more than three seconds.',
-      metadata: {
-        target: {
-          element: '*',
-          attributes: 'text-decoration'
-        },
-        'success-criteria': [{
-          name: '2.2.2',
-          level: 'A',
-          principle: 'Operable',
-          url: 'https://www.w3.org/WAI/WCAG21/Understanding/pause-stop-hide.html'
-        }
-        ],
-        related: ['SCR22'],
-        url: 'https://www.w3.org/WAI/WCAG21/Techniques/failures/F4',
-        passed: 0,
-        warning: 0,
-        failed: 0,
-        inapplicable: 0,
-        outcome: '',
-        description: ''
-      },
-      results: new Array<CSSTechniqueResult>()
-    });
+  constructor(technique?: any) {
+    super(technique);
   }
 
   async execute(styleSheets: CSSStylesheet[]): Promise<void> {

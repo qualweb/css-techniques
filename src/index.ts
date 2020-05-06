@@ -3,38 +3,23 @@
 import { CSSTOptions, CSSTechniquesReport } from '@qualweb/css-techniques';
 import { CSSStylesheet } from '@qualweb/core';
 
-import QW_CSS_T1 from './techniques/QW-CSS-T1';
-import QW_CSS_T2 from './techniques/QW-CSS-T2';
-import QW_CSS_T3 from './techniques/QW-CSS-T3';
-import QW_CSS_T4 from './techniques/QW-CSS-T4';
-import QW_CSS_T5 from './techniques/QW-CSS-T5';
-import QW_CSS_T6 from './techniques/QW-CSS-T6';
-import QW_CSS_T7 from './techniques/QW-CSS-T7';
+import * as techniques from './lib/techniques';
 
 class CSSTechniques {
 
   private techniques: any;
 
-  private techniquesToExecute = {
-    'QW-CSS-T1': true,
-    'QW-CSS-T2': true,
-    'QW-CSS-T3': true,
-    'QW-CSS-T4': true,
-    'QW-CSS-T5': true,
-    'QW-CSS-T6': true,
-    'QW-CSS-T7': true
-  };
+  private techniquesToExecute: any;
 
   constructor(options?: CSSTOptions) {
-    this.techniques = {
-      'QW-CSS-T1': new QW_CSS_T1(),
-      'QW-CSS-T2': new QW_CSS_T2(),
-      'QW-CSS-T3': new QW_CSS_T3(),
-      'QW-CSS-T4': new QW_CSS_T4(),
-      'QW-CSS-T5': new QW_CSS_T5(),
-      'QW-CSS-T6': new QW_CSS_T6(),
-      'QW-CSS-T7': new QW_CSS_T7()
-    };
+    this.techniques = {};
+    this.techniquesToExecute = {};
+
+    for(const technique of Object.keys(techniques) || []) {
+      const _technique = technique.replace(/_/g, '-');
+      this.techniques[_technique] = new techniques[technique]();
+      this.techniquesToExecute[_technique] = true;
+    }
 
     if (options) {
       this.configure(options);
@@ -97,8 +82,8 @@ class CSSTechniques {
   private async executeTechnique(report: CSSTechniquesReport, technique: string, styleSheets: CSSStylesheet[], mappedDOM: any): Promise<void> {
     try {
       await this.techniques[technique].execute(styleSheets, mappedDOM);
-      report.techniques[technique] = this.techniques[technique].getFinalResults();
-      report.metadata[report.techniques[technique].metadata.outcome]++;
+      report.assertions[technique] = this.techniques[technique].getFinalResults();
+      report.metadata[report.assertions[technique].metadata.outcome]++;
       this.techniques[technique].reset();
     } catch(err) {
       console.error(err);
@@ -125,7 +110,7 @@ class CSSTechniques {
         failed: 0,
         inapplicable: 0
       },
-      techniques: {}
+      assertions: {}
     };
 
     await this.executeTechniques(report, styleSheets, mappedDOM);

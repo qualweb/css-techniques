@@ -47,7 +47,7 @@ describe('Technique QW-CSS-T3', function () {
         });
 
         const report = await cssTechniques.execute(stylesheets);
-        expect(report.techniques['QW-CSS-T3'].metadata.outcome).to.be.equal(test.outcome);
+        expect(report.assertions['QW-CSS-T3'].metadata.outcome).to.be.equal(test.outcome);
       });
     });
   }
