@@ -22,7 +22,7 @@ class QW_CSS_T6 extends Technique {
     }
 
     if(super.getNumberOfFailedResults() === 0){
-      super.fillEvaluation('passed', `Didn't find any text-decoration:blink properties`);
+      super.fillEvaluation('RC1','passed', `Didn't find any text-decoration:blink properties`);
     }
   }
 
@@ -64,7 +64,7 @@ class QW_CSS_T6 extends Technique {
 
   private extractInfo(cssObject: any, declaration: any, fileName: string): void {
     if(declaration['value'] === 'blink'){
-      super.fillEvaluation('failed', `Element has the property text-decoration:blink.`,
+      super.fillEvaluation('RC2','failed', `Element has the property text-decoration:blink.`,
       css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
       fileName, cssObject['selectors'].toString(), cssObject['position'],
       declaration['property'], declaration['value'], declaration['position']);

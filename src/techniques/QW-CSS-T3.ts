@@ -63,30 +63,30 @@ class QW_CSS_T3 extends Technique {
     if(CssUtils.trimImportant(declaration['value']).endsWith('%')){
       let number = +declaration['value'].replace('%','');
       if(number >= 150 && number <= 200){
-        super.fillEvaluation('passed', `Text block has line spacing between 150% and 200%`,
+        super.fillEvaluation('RC1','passed', `Text block has line spacing between 150% and 200%`,
         css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
         fileName, cssObject['selectors'].toString(), cssObject['position'],
         declaration['property'], declaration['value'], declaration['position']);
       }else{
-        super.fillEvaluation('failed', `Text block doesn't have line spacing between 150% and 200%.`,
+        super.fillEvaluation('RC2','failed', `Text block doesn't have line spacing between 150% and 200%.`,
         css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
         fileName, cssObject['selectors'].toString(), cssObject['position'],
         declaration['property'], declaration['value'], declaration['position']);
       }
     } else if(typeof +declaration['value'] === 'number'){
       if(+declaration['value'] >= 1.5 && +declaration['value'] <= 2){
-        super.fillEvaluation('passed', `Text block has line spacing between 150% and 200%`,
+        super.fillEvaluation('RC3','passed', `Text block has line spacing between 150% and 200%`,
         css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
         fileName, cssObject['selectors'].toString(), cssObject['position'],
         declaration['property'], declaration['value'], declaration['position']);
       }else{
-        super.fillEvaluation('failed', `Text block doesn't have line spacing between 150% and 200%.`,
+        super.fillEvaluation('RC4','failed', `Text block doesn't have line spacing between 150% and 200%.`,
         css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
         fileName, cssObject['selectors'].toString(), cssObject['position'],
         declaration['property'], declaration['value'], declaration['position']);
       }
     }else {
-      super.fillEvaluation('inapplicable', `Text block line-height property isn't percentage.`,
+      super.fillEvaluation('RC5','inapplicable', `Text block line-height property isn't percentage.`,
         css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
         fileName, cssObject['selectors'].toString(), cssObject['position'],
         declaration['property'], declaration['value'], declaration['position']);
