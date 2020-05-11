@@ -80,7 +80,7 @@ class QW_CSS_T4 extends Technique {
       super.fillEvaluation(
         'RC1',
         "passed",
-        `Element uses CSS properties were used to control the visual presentation of text`,
+        `Element uses CSS properties to control the visual presentation of text`,
         css.stringify({
           type: "stylesheet",
           stylesheet: { rules: [cssObject] }
@@ -96,7 +96,7 @@ class QW_CSS_T4 extends Technique {
       super.fillEvaluation(
         'RC2',
         "inapplicable",
-        `Element doesn't uses CSS properties were used to control the visual presentation of text`
+        `Element does not use CSS properties to control the visual presentation of text`
       );
     }
   }
