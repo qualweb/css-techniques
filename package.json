@@ -1,6 +1,6 @@
 {
   "name": "@qualweb/css-techniques",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "description": "Implementation of the WCAG 2.1 CSS techniques",
   "main": "dist/index.js",
   "scripts": {
@@ -38,7 +38,7 @@
   },
   "homepage": "https://github.com/qualweb/css-techniques#readme",
   "devDependencies": {
-    "@qualweb/types": "^0.3.28",
+    "@qualweb/types": "^0.3.31",
     "@types/css": "0.0.31",
     "@types/lodash.clone": "^4.5.6",
     "@types/lodash.clonedeep": "^4.5.6",
@@ -47,7 +47,7 @@
     "css-select": "^2.1.0",
     "htmlparser2": "^4.1.0",
     "mocha": "^7.1.2",
-    "puppeteer": "^3.0.2",
+    "puppeteer": "^3.0.4",
     "request": "^2.88.0",
     "typescript": "^3.8.3"
   },
