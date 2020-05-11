@@ -62,19 +62,19 @@ class QW_CSS_T1 extends Technique {
     const names = ['xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large', 'xsmaller', 'larger'];
 
     if(CssUtils.trimImportant(declaration['value']).includes('px')){
-      super.fillEvaluation('failed', `Element 'font-size' style attribute uses 'px'`,
+      super.fillEvaluation('RC1','failed', `Element 'font-size' style attribute uses 'px'`,
         css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
         fileName, cssObject['selectors'].toString(), cssObject['position'],
         declaration['property'], declaration['value'], declaration['position'])
     } else if(CssUtils.trimImportant(declaration['value']).endsWith('em') || //C14 passed
               CssUtils.trimImportant(declaration['value']).endsWith('%') || //C12 passed
               names.includes(CssUtils.trimImportant(declaration['value']).trim())){// C13 passed
-      super.fillEvaluation('passed', `Element 'font-size' style attribute doesn't use 'px'`,
+      super.fillEvaluation('RC2','passed', `Element 'font-size' style attribute doesn't use 'px'`,
         css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
         fileName, cssObject['selectors'].toString(), cssObject['position'],
         declaration['property'], declaration['value'], declaration['position']);
     } else {
-      super.fillEvaluation('inapplicable', `Element has 'font-size' style with unknown metric`)
+      super.fillEvaluation('RC3','inapplicable', `Element has 'font-size' style with unknown metric`)
     }
   }
 }

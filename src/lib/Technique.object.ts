@@ -44,14 +44,15 @@ abstract class Technique {
     return this.technique.metadata.inapplicable;
   }
 
-  protected fillEvaluation(verdict: '' | 'passed' | 'failed' | 'warning' | 'inapplicable', description: string,
+  protected fillEvaluation(resultCode: string, verdict: '' | 'passed' | 'failed' | 'warning' | 'inapplicable', description: string,
                           cssCode?: string, stylesheetFile?: string,
                           selectorValue?: string, selectorPosition?: css.Position,
                           propertyName?: string, propertyValue?: string, propertyPosition?: css.Position) {
 
     const evaluation: CSSTechniqueResult = {
       verdict: verdict,
-      description: description
+      description: description,
+      resultCode: resultCode
     };
 
     if (verdict !== 'inapplicable' && selectorValue && propertyName && propertyValue){

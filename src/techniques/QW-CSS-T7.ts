@@ -24,7 +24,7 @@ class QW_CSS_T7 extends Technique {
             let hasBGColor = false;
             while(parent && !hasBGColor){
               if(this.getStyle(parent, "background-color") || this.getStyle(parent, "bgcolor")){
-                super.fillEvaluation('passed', `Element has color and background-color set`);
+                super.fillEvaluation('RC1','passed', `Element has color and background-color set`);
                 hasBGColor = true;
                 backgroundChecked[parent['startIndex']] = true;
               }
@@ -32,7 +32,7 @@ class QW_CSS_T7 extends Technique {
             }
             if(!hasBGColor)
               if(mappedDOM[key]['attribs']['css'])
-                super.fillEvaluation('failed', `Element has color set but not background-color`,
+                super.fillEvaluation('RC2','failed', `Element has color set but not background-color`,
                                       mappedDOM[key]['attribs']['css']?mappedDOM[key]['attribs']['css']: undefined,
                                       undefined,
                                       mappedDOM[key]['name'],
@@ -41,7 +41,7 @@ class QW_CSS_T7 extends Technique {
                                       mappedDOM[key]['attribs']['css']["color"]?mappedDOM[key]['attribs']['css']["color"]['value']:mappedDOM[key]['attribs']['css']["text"]['value'],
                                       undefined);
               else
-                super.fillEvaluation('failed', `Element has color set but not background-color`,
+                super.fillEvaluation('RC3','failed', `Element has color set but not background-color`,
                         undefined,
                         undefined,
                         mappedDOM[key]['name'],
@@ -61,7 +61,7 @@ class QW_CSS_T7 extends Technique {
       for(let key of keys || []){
         if(!backgroundChecked[key]){
           if(mappedDOM[key]['attribs']['css'])
-          super.fillEvaluation('failed', `Element has background-color set but not color`,
+          super.fillEvaluation('RC4','failed', `Element has background-color set but not color`,
                               mappedDOM[key]['attribs']['css'],
                               undefined,
                               mappedDOM[key]['name'],
@@ -70,7 +70,7 @@ class QW_CSS_T7 extends Technique {
                               mappedDOM[key]['attribs']['css']["background-color"]?mappedDOM[key]['attribs']['css']["background-color"]['value']:mappedDOM[key]['attribs']['css']["bgcolor"]['value'],
                               undefined);
               else
-                super.fillEvaluation('failed', `Element has color set but not background-color`,
+                super.fillEvaluation('RC5','failed', `Element has color set but not background-color`,
                                       undefined,
                                       undefined,
                                       mappedDOM[key]['name'],
@@ -92,7 +92,6 @@ class QW_CSS_T7 extends Technique {
   }
 
   private getParent(mappedDOM:any, myID: string): Object | undefined{
-
     if(mappedDOM[myID]['parent']){
       let parentID = mappedDOM[myID]['parent']['startIndex'];
       if(mappedDOM.hasOwnProperty(parentID))

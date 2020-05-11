@@ -63,14 +63,14 @@ class QW_CSS_T5 extends Technique {
     if(cssObject['selectors'] && this.selectorIsContainer(cssObject['selectors'])){
       for(let unit of this.relativeLengths){
         if(CssUtils.trimImportant(declaration['value']).endsWith(unit)){
-          super.fillEvaluation('warning', `Element 'width' style attribute uses ` + unit,
+          super.fillEvaluation('RC1','warning', `Element 'width' style attribute uses ` + unit,
           css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
           fileName, cssObject['selectors'].toString(), cssObject['position'],
           declaration['property'], declaration['value'], declaration['position'])
           return;
         }
       }
-      super.fillEvaluation('failed', `Element 'width' style attribute doesn't use a relative length`)
+      super.fillEvaluation('RC2','failed', `Element 'width' style attribute doesn't use a relative length`)
     }
   }
 

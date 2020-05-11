@@ -78,6 +78,7 @@ class QW_CSS_T4 extends Technique {
 
     if (names.includes(declaration["property"])) {
       super.fillEvaluation(
+        'RC1',
         "passed",
         `Element uses CSS properties were used to control the visual presentation of text`,
         css.stringify({
@@ -93,6 +94,7 @@ class QW_CSS_T4 extends Technique {
       );
     } else {
       super.fillEvaluation(
+        'RC2',
         "inapplicable",
         `Element doesn't uses CSS properties were used to control the visual presentation of text`
       );
