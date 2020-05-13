@@ -2,7 +2,7 @@
 
 import { CSSTechniqueResult } from '@qualweb/css-techniques';
 import techniques from './techniques.json';
-import clone from 'lodash.clone';
+import cloneDeep from 'lodash.clonedeep';
 
 function CSSTechnique<T extends { new (...args: any[]): {} }>(constructor: T) {
   const technique = techniques[constructor.name];
@@ -16,7 +16,7 @@ function CSSTechnique<T extends { new (...args: any[]): {} }>(constructor: T) {
   
   const newConstructor: any = function () {
     let func: any = function () {
-      return new constructor(clone(technique));
+      return new constructor(cloneDeep(technique));
     }
     func.prototype = constructor.prototype;
     return new func();
