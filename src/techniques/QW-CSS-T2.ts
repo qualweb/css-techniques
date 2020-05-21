@@ -53,7 +53,7 @@ class QW_CSS_T2 extends Technique {
           if (declaration['property'] === 'text-align'){
             this.extractInfo(cssObject, declaration, fileName);
           }else{
-            super.fillEvaluation('RC1','failed', `Text block doesn't have alignment property.`,
+            super.fillEvaluation('RC1','inapplicable', `Text block doesn't have alignment property.`,
               css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
               fileName, cssObject['selectors'].toString(), cssObject['position'],
               declaration['property'], declaration['value'], declaration['position']);
