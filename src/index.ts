@@ -135,7 +135,7 @@ class CSSTechniques {
         }
       }
     }
-    console.log(report);
+    
     return report;
   }
 }
