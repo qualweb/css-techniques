@@ -2,7 +2,10 @@
 
 import { CSSStylesheet } from '@qualweb/core';
 import Technique from '../lib/Technique.object';
+//import { CSSTechniqueResult } from '@qualweb/css-techniques';
 import { CSSTechnique } from '../lib/decorator';
+import { QWElement } from '@qualweb/qw-element';
+//import { QWPage } from '@qualweb/qw-page';
 
 @CSSTechnique
 class QW_CSS_T7 extends Technique {
@@ -11,7 +14,62 @@ class QW_CSS_T7 extends Technique {
     super(technique);
   }
 
-  async execute(styleSheets: CSSStylesheet[], mappedDOM: any): Promise<void> {
+  executeElement(element: QWElement): void {
+
+  }
+
+  /*execute(styleSheets: CSSStylesheet[], page: QWPage): void {
+    const styleElements = page.getElements('style');
+    for (const element of styleElements || []) {
+      const sheet = <any> element.getElementProperty('sheet');
+      for (const rule of sheet.cssRules || []) {
+        const style = rule.style.cssText;
+        this.checkCssProperty(style, element);
+      }
+    }
+
+    const elements = page.getElements(['style']);
+  }
+
+  private checkCssProperty(style: string, element: QWElement): void {
+    
+    const evaluation: CSSTechniqueResult = {
+      verdict: '',
+      description: '',
+      resultCode: ''
+    };
+
+    const properties = style.split(';').filter(p => p.trim() !== '') || [style];
+      
+    for (const property of properties) {
+      if (property.includes('font-size')) {
+        const fontSize = property.split(':')[1];
+        const hasImportant = fontSize.includes('!important');
+        
+        if (hasImportant) {
+          const hasAbsoluteUnit = fontSize.includes('cm') || fontSize.includes('mm') || fontSize.includes('in') || fontSize.includes('px') || fontSize.includes('pt') || fontSize.includes('pt');
+          
+          if (!hasAbsoluteUnit) {
+            evaluation.verdict = 'passed';
+            evaluation.description = 'This test target has a font-size css property using an relative unit value with the important flag.';
+            evaluation.resultCode = 'RC1';
+          } else {
+            evaluation.verdict = 'failed';
+            evaluation.description = 'This test target has a font-size css property using an absolute unit value with the important flag.';
+            evaluation.resultCode = 'RC2';
+          }
+
+          evaluation.pointer = element.getElementSelector();
+          evaluation.htmlCode = element.getElementHtmlCode(true, true);
+          evaluation.attributes = property;
+
+          super.addEvaluationResult(evaluation);
+        }
+      }
+    }
+  }*/
+
+  execute(styleSheets: CSSStylesheet[], mappedDOM: any): void {
     if(mappedDOM){
       let backgroundChecked = {};
 

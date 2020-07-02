@@ -25,6 +25,18 @@ function CSSTechnique<T extends { new (...args: any[]): {} }>(constructor: T) {
   return newConstructor;
 }
 
+function ElementExists(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+  const method = descriptor.value;
+  descriptor.value = function () {
+    if (arguments[0]) {
+      return method.apply(this, arguments);
+    } else {
+      return;
+    }
+  };
+}
+
 export { 
-  CSSTechnique
+  CSSTechnique,
+  ElementExists
 };

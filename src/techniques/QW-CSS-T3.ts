@@ -5,12 +5,17 @@ import css from 'css';
 import { CssUtils } from '@qualweb/util';
 import Technique from '../lib/Technique.object';
 import { CSSTechnique } from '../lib/decorator';
+import { QWElement } from '@qualweb/qw-element';
 
 @CSSTechnique
 class QW_CSS_T3 extends Technique {
 
   constructor(technique?: any) {
     super(technique);
+  }
+
+  executeElement(element: QWElement): void {
+
   }
 
   async execute(styleSheets: CSSStylesheet[]): Promise<void> {

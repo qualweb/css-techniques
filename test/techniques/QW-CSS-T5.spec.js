@@ -1,83 +1,103 @@
-const {
-  CSSTechniques
-} = require('../../dist/index');
 const {expect} = require('chai');
 
 const puppeteer = require('puppeteer');
-const { getDom } = require('../getDom');
+const { Dom } = require('@qualweb/dom');
 
-describe('Technique QW-CSS-T5', function () {
+describe('Technique QW-CSS-T5', async function () {
+
+  /*const tests = [
+    {
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/em.html',
+      outcome: 'passed'
+    },
+    {
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/emImportant.html',
+      outcome: 'passed'
+    },
+    {
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/emOnlyPElement.html',
+      outcome: 'passed'
+    },
+    {
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/percentage.html',
+      outcome: 'passed'
+    },
+    {
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/larger.html',
+      outcome: 'passed'
+    },
+    {
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/px.html',
+      outcome: 'failed'
+    },
+    {
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/pxImportant.html',
+      outcome: 'failed'
+    },
+    {
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/initial.html',
+      outcome: 'inapplicable'
+    },
+    {
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/pt.html',
+      outcome: 'inapplicable'
+    },
+    {
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/zero.html',
+      outcome: 'inapplicable'
+    },
+    {
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/larg.html',
+      outcome: 'inapplicable'
+    },
+  ];*/
+
   const tests = [
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T5/em.html',
-      outcome: 'warning'
-    },
-    {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T5/ex.html',
-      outcome: 'warning'
-    },
-    {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T5/ch.html',
-      outcome: 'warning'
-    },
-    {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T5/rem.html',
-      outcome: 'warning'
-    },
-    {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T5/vh.html',
-      outcome: 'warning'
-    },
-    {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T5/vw.html',
-      outcome: 'warning'
-    },
-    {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T5/vmin.html',
-      outcome: 'warning'
-    },
-    {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T5/vmax.html',
-      outcome: 'warning'
-    },
-    {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T5/percentage.html',
-      outcome: 'warning'
-    },
-    {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~asantos/T5/t2.html',
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~jvicente/test2/',
       outcome: 'failed'
     }
   ];
-  let browser;
-  it("pup open", async function () {
-    browser = await puppeteer.launch();
-  });
-  let i = 0;
-  let lastOutcome = 'inapplicable';
-  for (const test of tests || []) {
-    if (test.outcome !== lastOutcome) {
-      lastOutcome = test.outcome;
-      i = 0;
-    }
-    i++;
-    describe(`${test.outcome.charAt(0).toUpperCase() + test.outcome.slice(1)} example ${i}`, function () {
-      it(`should have outcome="${test.outcome}"`, async function () {
-        this.timeout(10 * 1000);
-        const {stylesheets} = await getDom(browser,test.url);
 
-        const cssTechniques = new CSSTechniques({
-          techniques: ["QW-CSS-T5"]
+  it('Starting testbench', async function () {
+    let i = 0;
+    const browser = await puppeteer.connect({ browserURL: 'http://127.0.0.1:9222/', defaultViewport: null });
+    //const browser = await puppeteer.launch();
+    let lastOutcome = 'warning';
+    for (const test of tests || []) {
+      if (test.outcome !== lastOutcome) {
+        lastOutcome = test.outcome;
+        i = 0;
+      }
+      i++;
+      describe(`${test.outcome.charAt(0).toUpperCase() + test.outcome.slice(1)} example ${i}`, async function () {
+        it(`should have outcome="${test.outcome}"`, async function () {
+          this.timeout(25 * 1000);
+          const dom = new Dom();
+          const {page, stylesheets} = await dom.getDOM(browser, {}, test.url, null);
+
+          await page.addScriptTag({
+            path: require.resolve('@qualweb/qw-page').replace('index.js', 'qwPage.js')
+          });
+
+          await page.addScriptTag({
+            path: require.resolve('../../dist/css.js')
+          });
+          
+          const report = await page.evaluate((stylesheets, mappedDOM, techniques) => {
+            const css = new CSSTechniques.CSSTechniques(techniques);
+            const report = css.execute(new QWPage.QWPage(document, window), stylesheets, mappedDOM);
+            return report;
+          }, stylesheets, {}, {techniques: ['QW-CSS-T5']});
+
+          expect(report.assertions['QW-CSS-T5'].metadata.outcome).to.be.equal(test.outcome);
         });
-
-        const report = await cssTechniques.execute(stylesheets);
-        expect(report.assertions['QW-CSS-T5'].metadata.outcome).to.be.equal(test.outcome);
       });
-    });
-  }
-  describe(``,  function () {
-    it(`pup shutdown`, async function () {
-      await browser.close();
+    }
+    describe(``,  function () {
+      it(`pup shutdown`, async function () {
+        //await browser.close();
+      });
     });
   });
 });

@@ -4,6 +4,7 @@ import { CSSStylesheet } from "@qualweb/core";
 import css from "css";
 import Technique from "../lib/Technique.object";
 import { CSSTechnique } from '../lib/decorator';
+import { QWElement } from '@qualweb/qw-element';
 
 @CSSTechnique
 class QW_CSS_T4 extends Technique {
@@ -11,6 +12,11 @@ class QW_CSS_T4 extends Technique {
   constructor(technique?: any) {
     super(technique);
   }
+
+  executeElement(element: QWElement): void {
+
+  }
+
   async execute(styleSheets: CSSStylesheet[]): Promise<void> {
     for (const styleSheet of styleSheets || []) {
       if (styleSheet.content && styleSheet.content.plain) {

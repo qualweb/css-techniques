@@ -5,6 +5,9 @@ import { CSSStylesheet } from '@qualweb/core';
 
 import * as techniques from './lib/techniques';
 
+import mapping from './lib/mapping';
+import { QWPage } from '@qualweb/qw-page';
+
 class CSSTechniques {
 
   private techniques: any;
@@ -79,28 +82,38 @@ class CSSTechniques {
     }
   }
 
-  private async executeTechnique(report: CSSTechniquesReport, technique: string, styleSheets: CSSStylesheet[], mappedDOM: any): Promise<void> {
-    try {
-      await this.techniques[technique].execute(styleSheets, mappedDOM);
-      report.assertions[technique] = this.techniques[technique].getFinalResults();
-      report.metadata[report.assertions[technique].metadata.outcome]++;
-      this.techniques[technique].reset();
-    } catch(err) {
-      console.error(err);
-    }
-  }
-
-  private async executeTechniques(report: CSSTechniquesReport, styleSheets: CSSStylesheet[], mappedDOM: any): Promise<void> {
-    const promises = new Array<any>();
-    for (const technique in this.techniques || {}) {
-      if (this.techniquesToExecute[technique]) {
-        promises.push(this.executeTechnique(report, technique, styleSheets, mappedDOM));
+  private executeTechnique(technique: string, selector: string, page: QWPage, styleSheets: CSSStylesheet[], mappedDOM: any, report: CSSTechniquesReport): void {
+    if (selector !== '') {
+      const elements = page.getElements(selector);
+      if (elements.length > 0) {
+        for (const elem of elements || []) {
+          try {
+            this.techniques[technique].executeElement(elem, page);
+          } catch (err) {
+            console.error(err);
+          }
+        }
+      } else {
+        try {
+          this.techniques[technique].executeElement(undefined, page);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    } else {
+      try {
+        this.techniques[technique].execute(styleSheets, page, mappedDOM);
+      } catch (err) {
+        console.error(err);
       }
     }
-    await Promise.all(promises);
+    
+    report.assertions[technique] = this.techniques[technique].getFinalResults();
+    report.metadata[report.assertions[technique].metadata.outcome]++;
+    this.techniques[technique].reset();
   }
 
-  public async execute(styleSheets: CSSStylesheet[], mappedDOM: any): Promise<CSSTechniquesReport> {
+  public execute(page: QWPage, styleSheets: CSSStylesheet[], mappedDOM: any): CSSTechniquesReport {
 
     const report: CSSTechniquesReport = {
       type: 'css-techniques',
@@ -113,8 +126,16 @@ class CSSTechniques {
       assertions: {}
     };
 
-    await this.executeTechniques(report, styleSheets, mappedDOM);
+    const selectors = Object.keys(mapping);
 
+    for (const selector of selectors || []) {
+      for (const technique of mapping[selector] || []) {
+        if (this.techniquesToExecute[technique]) {
+          this.executeTechnique(technique, selector, page, styleSheets, mappedDOM, report)
+        }
+      }
+    }
+    console.log(report);
     return report;
   }
 }
