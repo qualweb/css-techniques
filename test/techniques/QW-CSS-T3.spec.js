@@ -23,6 +23,14 @@ describe('Technique QW-CSS-T3', function () {
     {
       url: 'http://accessible-serv.lasige.di.fc.ul.pt/~aestriga/testeCSS-T3/teste4.html',
       outcome: 'passed'
+    },
+    {
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~aestriga/testeCSS-T3/teste5.html',
+      outcome: 'warning'
+    }
+    ,{
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~aestriga/testeCSS-T3/teste6.html',
+      outcome: 'failed'
     }
   ];
   let browser;

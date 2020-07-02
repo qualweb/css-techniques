@@ -56,7 +56,6 @@ abstract class Technique {
       description: description,
       resultCode: resultCode
     };
-
     if (verdict !== 'inapplicable' && selectorValue && propertyName && propertyValue){
       evaluation.cssCode = cssCode;
       evaluation.stylesheetFile = stylesheetFile;
