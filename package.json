@@ -1,8 +1,8 @@
 {
   "name": "@qualweb/css-techniques",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Implementation of the WCAG 2.1 CSS techniques",
-  "main": "dist/index.js",
+  "main": "dist/css.js",
   "scripts": {
     "tsc": "tsc",
     "test": "mocha test/**/*",
