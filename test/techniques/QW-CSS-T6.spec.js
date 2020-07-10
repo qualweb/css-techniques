@@ -1,51 +1,101 @@
-const {
-  CSSTechniques
-} = require('../../dist/index');
-const {expect} = require('chai');
+import { expect } from 'chai';
+import puppeteer from 'puppeteer';
+import { Dom } from '@qualweb/dom';
 
-const puppeteer = require('puppeteer');
-const { getDom } = require('../getDom');
+describe('Technique QW-CSS-T6', async function () {
 
-describe('Technique QW-CSS-T6', function () {
-  const tests = [
+  /*const tests = [
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~aestriga/testeCSS-T6/teste1.html',
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/em.html',
+      outcome: 'passed'
+    },
+    {
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/emImportant.html',
+      outcome: 'passed'
+    },
+    {
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/emOnlyPElement.html',
+      outcome: 'passed'
+    },
+    {
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/percentage.html',
+      outcome: 'passed'
+    },
+    {
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/larger.html',
+      outcome: 'passed'
+    },
+    {
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/px.html',
       outcome: 'failed'
     },
     {
-      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~aestriga/testeCSS-T6/teste2.html',
-      outcome: 'passed'
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/pxImportant.html',
+      outcome: 'failed'
+    },
+    {
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/initial.html',
+      outcome: 'inapplicable'
+    },
+    {
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/pt.html',
+      outcome: 'inapplicable'
+    },
+    {
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/zero.html',
+      outcome: 'inapplicable'
+    },
+    {
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~bandrade/css1/larg.html',
+      outcome: 'inapplicable'
+    },
+  ];*/
+
+  const tests = [
+    {
+      url: 'http://accessible-serv.lasige.di.fc.ul.pt/~jvicente/test2/',
+      outcome: 'failed'
     }
   ];
-  let browser;
-  it("pup open", async function () {
-    browser = await puppeteer.launch();
-  });
-  let i = 0;
-  let lastOutcome = 'inapplicable';
-  for (const test of tests || []) {
-    if (test.outcome !== lastOutcome) {
-      lastOutcome = test.outcome;
-      i = 0;
-    }
-    i++;
-    describe(`${test.outcome.charAt(0).toUpperCase() + test.outcome.slice(1)} example ${i}`, function () {
-      it(`should have outcome="${test.outcome}"`, async function () {
-        this.timeout(10 * 1000);
-        const {stylesheets} = await getDom(browser,test.url);
 
-        const cssTechniques = new CSSTechniques({
-          techniques: ["QW-CSS-T6"]
+  it('Starting testbench', async function () {
+    let i = 0;
+    const browser = await puppeteer.connect({ browserURL: 'http://127.0.0.1:9222/', defaultViewport: null });
+    //const browser = await puppeteer.launch();
+    let lastOutcome = 'warning';
+    for (const test of tests || []) {
+      if (test.outcome !== lastOutcome) {
+        lastOutcome = test.outcome;
+        i = 0;
+      }
+      i++;
+      describe(`${test.outcome.charAt(0).toUpperCase() + test.outcome.slice(1)} example ${i}`, async function () {
+        it(`should have outcome="${test.outcome}"`, async function () {
+          this.timeout(25 * 1000);
+          const dom = new Dom();
+          const { page } = await dom.getDOM(browser, {}, test.url, null);
+
+          await page.addScriptTag({
+            path: require.resolve('@qualweb/qw-page').replace('index.js', 'qwPage.js')
+          });
+
+          await page.addScriptTag({
+            path: require.resolve('../../dist/css.js')
+          });
+          
+          const report = await page.evaluate((options) => {
+            const css = new CSSTechniques.CSSTechniques(options);
+            return css.execute(new QWPage.QWPage(document, window, true));
+          }, {techniques: ['QW-CSS-T6']});
+
+          expect(report.assertions['QW-CSS-T6'].metadata.outcome).to.be.equal(test.outcome);
         });
-
-        const report = await cssTechniques.execute(stylesheets);
-        expect(report.assertions['QW-CSS-T6'].metadata.outcome).to.be.equal(test.outcome);
       });
-    });
-  }
-  describe(``,  function () {
-    it(`pup shutdown`, async function () {
-      await browser.close();
+    }
+    describe(``,  function () {
+      it(`pup shutdown`, async function () {
+        //await browser.close();
+      });
     });
   });
 });

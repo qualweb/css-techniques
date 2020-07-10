@@ -1,11 +1,8 @@
-'use strict';
-
-import { CSSStylesheet } from '@qualweb/core';
 import Technique from '../lib/Technique.object';
-//import { CSSTechniqueResult } from '@qualweb/css-techniques';
-import { CSSTechnique } from '../lib/decorator';
+import { CSSTechniqueResult } from '@qualweb/css-techniques';
+import { CSSTechnique, ElementExists } from '../lib/decorator';
 import { QWElement } from '@qualweb/qw-element';
-//import { QWPage } from '@qualweb/qw-page';
+import { QWPage } from '@qualweb/qw-page';
 
 @CSSTechnique
 class QW_CSS_T7 extends Technique {
@@ -14,8 +11,62 @@ class QW_CSS_T7 extends Technique {
     super(technique);
   }
 
-  executeElement(element: QWElement): void {
+  @ElementExists
+  execute(element: QWElement, page: QWPage): void {
 
+    if (element.getElementTagName() === 'head' || element.getElementParent()?.getElementTagName() === 'head' || !element.hasTextNode()) {
+      return;
+    }
+
+    const evaluation: CSSTechniqueResult = {
+      verdict: '',
+      description: '',
+      resultCode: ''
+    };
+
+    let foundColorProperty = false;
+    let foundBackgroundProperty = false;
+
+    let parent: QWElement | null = element;
+    while (parent !== null) {
+      const hasColor = parent.hasCSSProperty('color');
+      const hasBackgroundColor = parent.hasCSSProperty('background-color');
+      const hasBackgroundImage = parent.hasCSSProperty('background-image');
+      const hasBackground = parent.hasCSSProperty('background');
+
+      if (hasColor && !foundColorProperty) {
+        foundColorProperty = true;
+      }
+
+      if ((hasBackground || hasBackgroundColor || hasBackgroundImage) && !foundBackgroundProperty) {
+        foundBackgroundProperty = true;
+      }
+
+      if (foundColorProperty && foundBackgroundProperty) {
+        parent = null;
+      } else {
+        parent = parent.getElementParent();
+      }
+    }
+
+    if (foundColorProperty && foundBackgroundProperty) {
+      evaluation.verdict = 'passed';
+      evaluation.description = `The test target has a author defined color and background css properties.`;
+      evaluation.resultCode = 'RC1';
+    } else if (foundColorProperty) {
+      evaluation.verdict = 'failed';
+      evaluation.description = `The test target has a author defined color css property but not a background css property.`;
+      evaluation.resultCode = 'RC2';
+    } else {
+      evaluation.verdict = 'failed';
+      evaluation.description = `The test target has a author defined color background property but not a color css property.`;
+      evaluation.resultCode = 'RC3';
+    }
+
+    evaluation.pointer = element.getElementSelector();
+    evaluation.htmlCode = element.getElementHtmlCode(true, true);
+
+    super.addEvaluationResult(evaluation);
   }
 
   /*execute(styleSheets: CSSStylesheet[], page: QWPage): void {
@@ -67,7 +118,7 @@ class QW_CSS_T7 extends Technique {
         }
       }
     }
-  }*/
+  }
 
   execute(styleSheets: CSSStylesheet[], mappedDOM: any): void {
     if(mappedDOM){
@@ -156,7 +207,7 @@ class QW_CSS_T7 extends Technique {
         return mappedDOM[parentID];
     }
     return undefined;
-  }
+  }*/
 }
 
 export = QW_CSS_T7;

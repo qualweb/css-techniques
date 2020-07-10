@@ -1,5 +1,3 @@
-'use strict';
-
 import { CSSTechniqueResult } from '@qualweb/css-techniques';
 import techniques from './techniques.json';
 import cloneDeep from 'lodash.clonedeep';
@@ -15,7 +13,7 @@ function CSSTechnique<T extends { new (...args: any[]): {} }>(constructor: T) {
   technique.results = new Array<CSSTechniqueResult>();
   
   const newConstructor: any = function () {
-    let func: any = function () {
+    const func: any = function () {
       return new constructor(cloneDeep(technique));
     }
     func.prototype = constructor.prototype;
@@ -36,7 +34,18 @@ function ElementExists(target: any, propertyKey: string, descriptor: PropertyDes
   };
 }
 
+function ElementIsAContainer(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+  const method = descriptor.value;
+  descriptor.value = function() {
+    const containers = ['span', 'article', 'section', 'nav', 'aside', 'hgroup', 'header', 'footer', 'address', 'p', 'hr', 'blockquote', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'ul', 'ol', 'dd', 'dt', 'dl', 'figcaption'];
+    if (containers.includes(arguments[0].getElementTagName())) {
+      return method.apply(this, arguments);
+    }
+  };
+}
+
 export { 
   CSSTechnique,
-  ElementExists
+  ElementExists,
+  ElementIsAContainer
 };

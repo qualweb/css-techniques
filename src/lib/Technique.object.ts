@@ -1,9 +1,6 @@
-'use strict';
-
 import clone from 'lodash.clone';
 import cloneDeep from 'lodash.clonedeep';
 import { CSSTechnique, CSSTechniqueResult } from '@qualweb/css-techniques';
-import { CSSStylesheet } from '@qualweb/core';
 import css from 'css';
 import { QWElement } from '@qualweb/qw-element';
 import { QWPage } from '@qualweb/qw-page';
@@ -72,9 +69,7 @@ abstract class Technique {
     this.technique.metadata[result.verdict]++;
   }
 
-  abstract execute(styleSheets: CSSStylesheet[], mappedDOM: any): void;
-
-  abstract executeElement(element: QWElement | undefined, page: QWPage): void;
+  abstract execute(element: QWElement | undefined, page: QWPage): void;
 
   public getFinalResults() {
     this.outcomeTechnique();
