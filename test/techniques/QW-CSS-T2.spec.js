@@ -1,7 +1,6 @@
-const {expect} = require('chai');
-
-const puppeteer = require('puppeteer');
-const { Dom } = require('@qualweb/dom');
+import { expect } from 'chai';
+import puppeteer from 'puppeteer';
+import { Dom } from '@qualweb/dom';
 
 describe('Technique QW-CSS-T2', async function () {
 
@@ -84,11 +83,10 @@ describe('Technique QW-CSS-T2', async function () {
             path: require.resolve('../../dist/css.js')
           });
           
-          const report = await page.evaluate((stylesheets, mappedDOM, techniques) => {
-            const css = new CSSTechniques.CSSTechniques(techniques);
-            const report = css.execute(new QWPage.QWPage(document, window), stylesheets, mappedDOM);
-            return report;
-          }, stylesheets, {}, {techniques: ['QW-CSS-T2']});
+          const report = await page.evaluate((options) => {
+            const css = new CSSTechniques.CSSTechniques(options);
+            return css.execute(new QWPage.QWPage(document, window), stylesheets, mappedDOM);
+          }, {techniques: ['QW-CSS-T2']});
 
           expect(report.assertions['QW-CSS-T2'].metadata.outcome).to.be.equal(test.outcome);
         });

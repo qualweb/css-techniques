@@ -1,17 +1,11 @@
-'use strict';
-
 import { CSSTOptions, CSSTechniquesReport } from '@qualweb/css-techniques';
-import { CSSStylesheet } from '@qualweb/core';
-
 import * as techniques from './lib/techniques';
-
 import mapping from './lib/mapping';
 import { QWPage } from '@qualweb/qw-page';
 
 class CSSTechniques {
 
   private techniques: any;
-
   private techniquesToExecute: any;
 
   constructor(options?: CSSTOptions) {
@@ -82,27 +76,19 @@ class CSSTechniques {
     }
   }
 
-  private executeTechnique(technique: string, selector: string, page: QWPage, styleSheets: CSSStylesheet[], mappedDOM: any, report: CSSTechniquesReport): void {
-    if (selector !== '') {
-      const elements = page.getElements(selector);
-      if (elements.length > 0) {
-        for (const elem of elements || []) {
-          try {
-            this.techniques[technique].executeElement(elem, page);
-          } catch (err) {
-            console.error(err);
-          }
-        }
-      } else {
+  private executeTechnique(technique: string, selector: string, page: QWPage, report: CSSTechniquesReport): void {
+    const elements = page.getElements(selector);
+    if (elements.length > 0) {
+      for (const elem of elements || []) {
         try {
-          this.techniques[technique].executeElement(undefined, page);
+          this.techniques[technique].execute(elem, page);
         } catch (err) {
           console.error(err);
         }
       }
     } else {
       try {
-        this.techniques[technique].execute(styleSheets, page, mappedDOM);
+        this.techniques[technique].execute(undefined, page);
       } catch (err) {
         console.error(err);
       }
@@ -113,7 +99,7 @@ class CSSTechniques {
     this.techniques[technique].reset();
   }
 
-  public execute(page: QWPage, styleSheets: CSSStylesheet[], mappedDOM: any): CSSTechniquesReport {
+  public execute(page: QWPage): CSSTechniquesReport {
 
     const report: CSSTechniquesReport = {
       type: 'css-techniques',
@@ -131,7 +117,7 @@ class CSSTechniques {
     for (const selector of selectors || []) {
       for (const technique of mapping[selector] || []) {
         if (this.techniquesToExecute[technique]) {
-          this.executeTechnique(technique, selector, page, styleSheets, mappedDOM, report)
+          this.executeTechnique(technique, selector, page, report)
         }
       }
     }

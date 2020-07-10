@@ -1,9 +1,8 @@
 'use strict';
 
-import { CSSStylesheet } from '@qualweb/core';
-import css from 'css';
+import { CSSTechniqueResult } from '@qualweb/css-techniques';
 import Technique from '../lib/Technique.object';
-import { CSSTechnique } from '../lib/decorator';
+import { CSSTechnique, ElementExists } from '../lib/decorator';
 import { QWElement } from '@qualweb/qw-element';
 
 @CSSTechnique
@@ -13,67 +12,66 @@ class QW_CSS_T6 extends Technique {
     super(technique);
   }
 
-  executeElement(element: QWElement): void {
+  @ElementExists
+  execute(element: QWElement): void {
 
-  }
+    const evaluation: CSSTechniqueResult = {
+      verdict: '',
+      description: '',
+      resultCode: ''
+    };
 
-  async execute(styleSheets: CSSStylesheet[]): Promise<void> {
-    for (const styleSheet of styleSheets || []) {
-      if(styleSheet.content && styleSheet.content.plain){
-        if (styleSheet.content.plain.includes('text-decoration')){
-          this.analyseAST(styleSheet.content.parsed, styleSheet.file);
-        }
-      }
-    }
+    if (element.elementHasAttribute('_cssRules')) {
+      const cssRules = JSON.parse(<string> element.getElementAttribute('_cssRules'));
 
-    if(super.getNumberOfFailedResults() === 0){
-      super.fillEvaluation('RC1','passed', `Didn't find any text-decoration:blink properties`);
-    }
-  }
+      const property = this.findTextDecorationWithBlink(cssRules);
 
-  private analyseAST(cssObject: any, fileName: string): void {
-    if (cssObject === undefined ||
-      cssObject['type'] === 'comment' ||
-      cssObject['type'] === 'keyframes' ||
-      cssObject['type'] === 'import'){ // ignore
-      return;
-    }
-    if (cssObject['type'] === 'rule' || cssObject['type'] === 'font-face' || cssObject['type'] === 'page') {
-      if(cssObject['selectors'])
-        this.loopDeclarations(cssObject, fileName)
-    } else {
-      if (cssObject['type'] === 'stylesheet') {
-        for (const key of cssObject['stylesheet']['rules'] || []) {
-          this.analyseAST(key, fileName);
-        }
-      } else {
-        for (const key of cssObject['rules'] || []) {
-          this.analyseAST(key, fileName);
-        }
+      if (property !== undefined) {
+        evaluation.verdict = 'failed';
+        evaluation.description = 'This test target has a `text-decoration` property with the value `blink';
+        evaluation.resultCode = 'RC1';
+        evaluation.htmlCode = element.getElementHtmlCode(true, true);
+        evaluation.pointer = element.getElementSelector();
+        evaluation.property = {
+          name: 'text-decoration',
+          value: 'blink'
+        };
+        evaluation.stylesheetFile = property.pointer;
+
+        super.addEvaluationResult(evaluation);
       }
     }
   }
 
-  private loopDeclarations(cssObject: any, fileName: string): void {
-    let declarations = cssObject['declarations'];
-    if(declarations) {
-      for (const declaration of declarations || []) {
-        if (declaration['property'] && declaration['value'] ) {
-          if (declaration['property'] === 'text-decoration') {
-            this.extractInfo(cssObject, declaration, fileName);
+  private findTextDecorationWithBlink(properties: any): any {
+    for (const property in properties || {}) {
+      if (property === 'media') {
+        const mediaRule = this.findInMediaRules(properties['media']);
+        if (mediaRule !== undefined) {
+          return mediaRule;
+        }
+      } else if (property === 'text-decoration') {
+        if (properties[property]['value'] === 'blink') {
+          return properties[property];
+        }
+      }
+    }
+
+    return undefined;
+  }
+
+  private findInMediaRules(media: any): any {
+    for (const condition in media || {}) {
+      for (const property in media[condition] || {}) {
+        if (property === 'text-decoration') {
+          if (media[condition][property]['value'] === 'blink') {
+            return media[condition][property];
           }
         }
       }
     }
-  }
 
-  private extractInfo(cssObject: any, declaration: any, fileName: string): void {
-    if(declaration['value'] === 'blink'){
-      super.fillEvaluation('RC2','failed', `Element has the property text-decoration:blink.`,
-      css.stringify({ type: 'stylesheet', stylesheet:{rules: [cssObject]}}),
-      fileName, cssObject['selectors'].toString(), cssObject['position'],
-      declaration['property'], declaration['value'], declaration['position']);
-    }
+    return undefined;
   }
 }
 
