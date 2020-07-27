@@ -73,7 +73,7 @@ describe('Technique QW-CSS-T5', async function () {
         it(`should have outcome="${test.outcome}"`, async function () {
           this.timeout(25 * 1000);
           const dom = new Dom();
-          const {page, stylesheets} = await dom.getDOM(browser, {}, test.url, null);
+          const { page } = await dom.getDOM(browser, {}, test.url, null);
 
           await page.addScriptTag({
             path: require.resolve('@qualweb/qw-page').replace('index.js', 'qwPage.js')
@@ -85,7 +85,7 @@ describe('Technique QW-CSS-T5', async function () {
           
           const report = await page.evaluate((options) => {
             const css = new CSSTechniques.CSSTechniques(options);
-            return css.execute(new QWPage.QWPage(document, window), stylesheets, mappedDOM);
+            return css.execute(new QWPage.QWPage(document, window));
           }, {techniques: ['QW-CSS-T5']});
 
           expect(report.assertions['QW-CSS-T5'].metadata.outcome).to.be.equal(test.outcome);

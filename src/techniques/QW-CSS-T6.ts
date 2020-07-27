@@ -22,7 +22,7 @@ class QW_CSS_T6 extends Technique {
     };
 
     if (element.elementHasAttribute('_cssRules')) {
-      const cssRules = JSON.parse(<string> element.getElementAttribute('_cssRules'));
+      const cssRules = element.getCSSRules();
 
       const property = this.findTextDecorationWithBlink(cssRules);
 
