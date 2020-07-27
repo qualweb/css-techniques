@@ -44,7 +44,7 @@ class QW_CSS_T1 extends Technique {
         
         if (hasImportant) {
           const value = fontSize.replace('!important', '').trim();
-          const hasAbsoluteUnit = value.endsWith('cm') || value.endsWith('mm') || value.endsWith('in') || value.endsWith('px') || value.endsWith('pt') || value.endsWith('pt');
+          const hasAbsoluteUnit = value.endsWith('cm') || value.endsWith('mm') || value.endsWith('in') || value.endsWith('px') || value.endsWith('pt') || value.endsWith('pc');
           
           if (!hasAbsoluteUnit) {
             evaluation.verdict = 'passed';

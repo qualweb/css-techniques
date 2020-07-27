@@ -1,6 +1,6 @@
 {
   "name": "@qualweb/css-techniques",
-  "version": "0.4.3",
+  "version": "0.4.5",
   "description": "Implementation of the WCAG 2.1 CSS techniques",
   "main": "dist/css.js",
   "scripts": {
@@ -36,23 +36,23 @@
   "homepage": "https://github.com/qualweb/css-techniques#readme",
   "devDependencies": {
     "@qualweb/dom": "^0.1.14",
-    "@qualweb/types": "^0.4.23",
+    "@qualweb/types": "^0.4.26",
     "@types/lodash.clone": "^4.5.6",
     "@types/lodash.clonedeep": "^4.5.6",
-    "@types/node": "^14.0.22",
+    "@types/node": "^14.0.26",
     "chai": "^4.2.0",
     "css-select": "^2.1.0",
     "esm": "^3.2.25",
     "mocha": "^8.0.1",
-    "puppeteer": "^5.0.0",
-    "typescript": "^3.9.6",
-    "webpack": "^4.43.0",
+    "puppeteer": "^5.2.1",
+    "typescript": "^3.9.7",
+    "webpack": "^4.44.0",
     "webpack-cli": "^3.3.12"
   },
   "dependencies": {
-    "@qualweb/qw-element": "^0.1.14",
-    "@qualweb/qw-page": "^0.1.16",
-    "@qualweb/util": "^0.3.21",
+    "@qualweb/qw-element": "^0.1.15",
+    "@qualweb/qw-page": "^0.1.17",
+    "@qualweb/util": "^0.3.24",
     "lodash.clone": "^4.5.0",
     "lodash.clonedeep": "^4.5.0",
     "lodash.intersection": "^4.4.0"
