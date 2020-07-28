@@ -53,20 +53,30 @@ class QW_CSS_T7 extends Technique {
       evaluation.verdict = 'passed';
       evaluation.description = `The test target has a author defined color and background css properties.`;
       evaluation.resultCode = 'RC1';
+
+      evaluation.pointer = element.getElementSelector();
+      evaluation.htmlCode = element.getElementHtmlCode(true, true);
+  
+      super.addEvaluationResult(evaluation);
     } else if (foundColorProperty) {
       evaluation.verdict = 'failed';
       evaluation.description = `The test target has a author defined color css property but not a background css property.`;
       evaluation.resultCode = 'RC2';
-    } else {
+
+      evaluation.pointer = element.getElementSelector();
+      evaluation.htmlCode = element.getElementHtmlCode(true, true);
+  
+      super.addEvaluationResult(evaluation);
+    } else if (foundBackgroundProperty) {
       evaluation.verdict = 'failed';
-      evaluation.description = `The test target has a author defined color background property but not a color css property.`;
+      evaluation.description = `The test target has a author defined background property but not a color css property.`;
       evaluation.resultCode = 'RC3';
+
+      evaluation.pointer = element.getElementSelector();
+      evaluation.htmlCode = element.getElementHtmlCode(true, true);
+  
+      super.addEvaluationResult(evaluation);
     }
-
-    evaluation.pointer = element.getElementSelector();
-    evaluation.htmlCode = element.getElementHtmlCode(true, true);
-
-    super.addEvaluationResult(evaluation);
   }
 
   /*execute(styleSheets: CSSStylesheet[], page: QWPage): void {
