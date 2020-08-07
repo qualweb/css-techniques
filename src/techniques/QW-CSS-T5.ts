@@ -23,7 +23,7 @@ class QW_CSS_T5 extends Technique {
       const sheet = <any> element.getElementProperty('sheet');
       
       for (const rule of sheet.cssRules || []) {
-        if (rule.style.cssText.includes('width:') && this.checkIfCssSelectorIsApplicable(rule, page)) {
+        if (rule?.style?.cssText?.includes('width:') && this.checkIfCssSelectorIsApplicable(rule, page)) {
           const style = rule?.style?.cssText;
           if (style) {
             this.checkCssProperty(style, element);
