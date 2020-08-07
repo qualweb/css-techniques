@@ -18,8 +18,10 @@ class QW_CSS_T1 extends Technique {
     if (element.getElementTagName() === 'style') {
       const sheet = <any> element.getElementProperty('sheet');
       for (const rule of sheet.cssRules || []) {
-        const style = rule.style.cssText;
-        this.checkCssProperty(style, element);
+        const style = rule?.style?.cssText;
+        if (style) {
+          this.checkCssProperty(style, element);
+        }
       }
     } else {
       const style = <string> element.getElementAttribute('style');
